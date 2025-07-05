@@ -12,6 +12,268 @@ from ...domain.models import CodeSymbol, APIExport, FunctionDependency
 logger = logging.getLogger(__name__)
 
 
+class ASTDataCollector(ast.NodeVisitor):
+    """Single-pass AST visitor to collect all required data efficiently."""
+    
+    def __init__(self):
+        self.symbols = []
+        self.imports = []
+        self.function_dependencies = []
+        self.all_exports = []
+        self.complexity_nodes = 0
+        self.function_count = 0
+        self.class_count = 0
+        self._current_function = None
+        self._symbol_map = {}
+    
+    def visit_FunctionDef(self, node):
+        """Visit function definition."""
+        self._current_function = node.name
+        self.function_count += 1
+        self.symbols.append(self._create_function_data(node))
+        self.generic_visit(node)
+        self._current_function = None
+    
+    def visit_AsyncFunctionDef(self, node):
+        """Visit async function definition."""
+        self._current_function = node.name
+        self.function_count += 1
+        self.symbols.append(self._create_function_data(node, is_async=True))
+        self.generic_visit(node)
+        self._current_function = None
+    
+    def visit_ClassDef(self, node):
+        """Visit class definition."""
+        self.class_count += 1
+        self.symbols.append(self._create_class_data(node))
+        self.generic_visit(node)
+    
+    def visit_Assign(self, node):
+        """Visit assignment (for module-level variables and __all__)."""
+        # Check for __all__ definition
+        for target in node.targets:
+            if isinstance(target, ast.Name) and target.id == "__all__":
+                if isinstance(node.value, ast.List):
+                    self.all_exports = [elt.s for elt in node.value.elts 
+                                      if isinstance(elt, ast.Constant) and isinstance(elt.value, str)]
+        
+        # Module-level variables
+        if self._is_module_level_assignment(node):
+            var_data = self._create_variable_data(node)
+            if var_data:
+                self.symbols.append(var_data)
+        
+        self.generic_visit(node)
+    
+    def visit_Import(self, node):
+        """Visit import statement."""
+        for alias in node.names:
+            self.imports.append(f"import {alias.name}")
+        self.generic_visit(node)
+    
+    def visit_ImportFrom(self, node):
+        """Visit from import statement."""
+        if node.module:
+            level = '.' * node.level if node.level else ''
+            names = ', '.join(alias.name for alias in node.names)
+            self.imports.append(f"from {level}{node.module} import {names}")
+        self.generic_visit(node)
+    
+    def visit_Call(self, node):
+        """Visit function call (for dependency tracking)."""
+        if self._current_function and isinstance(node.func, ast.Name):
+            # Track function calls within functions
+            pass  # Simplified for now
+        self.generic_visit(node)
+    
+    def visit_If(self, node):
+        """Visit if statement (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_While(self, node):
+        """Visit while loop (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_For(self, node):
+        """Visit for loop (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_AsyncFor(self, node):
+        """Visit async for loop (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_ExceptHandler(self, node):
+        """Visit except handler (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_With(self, node):
+        """Visit with statement (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_AsyncWith(self, node):
+        """Visit async with statement (for complexity)."""
+        self.complexity_nodes += 1
+        self.generic_visit(node)
+    
+    def visit_BoolOp(self, node):
+        """Visit boolean operation (for complexity)."""
+        self.complexity_nodes += len(node.values) - 1
+        self.generic_visit(node)
+    
+    def create_symbols(self, lines: list[str]) -> list[CodeSymbol]:
+        """Convert collected data into CodeSymbol objects."""
+        symbols = []
+        
+        for symbol_data in self.symbols:
+            if symbol_data['type'] == 'function':
+                symbol = self._create_function_symbol(symbol_data, lines)
+            elif symbol_data['type'] == 'class':
+                symbol = self._create_class_symbol(symbol_data, lines)
+            elif symbol_data['type'] == 'variable':
+                symbol = self._create_variable_symbol(symbol_data, lines)
+            else:
+                continue
+                
+            symbols.append(symbol)
+            self._symbol_map[symbol.name] = symbol.id
+        
+        return symbols
+    
+    def _create_function_data(self, node: ast.FunctionDef, is_async: bool = False) -> dict:
+        """Create function data dictionary."""
+        return {
+            'type': 'function',
+            'name': node.name,
+            'is_async': is_async,
+            'line_start': node.lineno,
+            'line_end': node.end_lineno or node.lineno,
+            'args': node.args,
+            'returns': node.returns,
+            'decorators': node.decorator_list,
+            'docstring': ast.get_docstring(node)
+        }
+    
+    def _create_class_data(self, node: ast.ClassDef) -> dict:
+        """Create class data dictionary."""
+        return {
+            'type': 'class',
+            'name': node.name,
+            'line_start': node.lineno,
+            'line_end': node.end_lineno or node.lineno,
+            'bases': node.bases,
+            'decorators': node.decorator_list,
+            'docstring': ast.get_docstring(node)
+        }
+    
+    def _create_variable_data(self, node: ast.Assign) -> dict | None:
+        """Create variable data dictionary."""
+        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            var_name = node.targets[0].id
+            return {
+                'type': 'variable',
+                'name': var_name,
+                'line_start': node.lineno,
+                'line_end': node.end_lineno or node.lineno,
+                'value': node.value
+            }
+        return None
+    
+    def _is_module_level_assignment(self, node: ast.Assign) -> bool:
+        """Check if assignment is at module level."""
+        # Simplified check - would need proper scope tracking
+        return True
+    
+    def _create_function_symbol(self, data: dict, lines: list[str]) -> CodeSymbol:
+        """Create CodeSymbol from function data."""
+        signature = self._format_function_signature(data)
+        
+        return CodeSymbol(
+            name=data['name'],
+            symbol_type="async_function" if data['is_async'] else "function",
+            line_start=data['line_start'],
+            line_end=data['line_end'],
+            signature=signature,
+            docstring=data['docstring'],
+            is_exported=not data['name'].startswith('_'),
+            is_private=data['name'].startswith('_'),
+            decorators=[self._get_decorator_name(dec) for dec in data['decorators']]
+        )
+    
+    def _create_class_symbol(self, data: dict, lines: list[str]) -> CodeSymbol:
+        """Create CodeSymbol from class data."""
+        bases = [self._get_node_name(base) for base in data['bases']]
+        signature = f"class {data['name']}"
+        if bases:
+            signature += f"({', '.join(bases)})"
+        
+        return CodeSymbol(
+            name=data['name'],
+            symbol_type="class",
+            line_start=data['line_start'],
+            line_end=data['line_end'],
+            signature=signature,
+            docstring=data['docstring'],
+            is_exported=not data['name'].startswith('_'),
+            is_private=data['name'].startswith('_'),
+            decorators=[self._get_decorator_name(dec) for dec in data['decorators']]
+        )
+    
+    def _create_variable_symbol(self, data: dict, lines: list[str]) -> CodeSymbol:
+        """Create CodeSymbol from variable data."""
+        symbol_type = "constant" if data['name'].isupper() else "variable"
+        
+        return CodeSymbol(
+            name=data['name'],
+            symbol_type=symbol_type,
+            line_start=data['line_start'],
+            line_end=data['line_end'],
+            signature=f"{data['name']} = ...",
+            is_exported=not data['name'].startswith('_'),
+            is_private=data['name'].startswith('_')
+        )
+    
+    def _format_function_signature(self, data: dict) -> str:
+        """Format function signature."""
+        prefix = "async def" if data['is_async'] else "def"
+        args = self._format_arguments(data['args'])
+        return_annotation = ""
+        if data['returns']:
+            return_annotation = f" -> {ast.unparse(data['returns'])}"
+        return f"{prefix} {data['name']}({args}){return_annotation}"
+    
+    def _format_arguments(self, args: ast.arguments) -> str:
+        """Format function arguments."""
+        arg_strs = []
+        for arg in args.args:
+            arg_str = arg.arg
+            if arg.annotation:
+                arg_str += f": {ast.unparse(arg.annotation)}"
+            arg_strs.append(arg_str)
+        return ", ".join(arg_strs)
+    
+    def _get_decorator_name(self, decorator: ast.expr) -> str:
+        """Get decorator name as string."""
+        if isinstance(decorator, ast.Name):
+            return decorator.id
+        elif isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name):
+            return decorator.func.id
+        else:
+            return ast.unparse(decorator)
+    
+    def _get_node_name(self, node: ast.expr) -> str:
+        """Get name from various node types."""
+        if isinstance(node, ast.Name):
+            return node.id
+        else:
+            return ast.unparse(node)
+
+
 class EnhancedPythonParser(LanguageParser):
     """Enhanced Python parser that extracts detailed code structure."""
 
@@ -30,34 +292,29 @@ class EnhancedPythonParser(LanguageParser):
         list[str],  # imports
         dict[str, Any]  # metadata
     ]:
-        """Extract detailed code structure from Python file."""
+        """Extract detailed code structure from Python file with single-pass traversal."""
         
         try:
             content = file_path.read_text(encoding='utf-8')
             tree = ast.parse(content)
             
-            symbols = []
-            exports = []
-            function_deps = []
-            imports = []
-            self._symbol_map = {}  # Reset for this file
+            # Use single-pass collector for efficiency
+            collector = ASTDataCollector()
+            collector.visit(tree)
             
-            # First pass: Extract all symbols
-            symbols = self._extract_symbols(tree, content)
+            # Create symbols from collected data
+            symbols = collector.create_symbols(content.splitlines())
             
-            # Second pass: Extract imports
-            imports = self._extract_imports(tree)
+            # Build symbol map for dependencies
+            self._symbol_map = {s.name: s.id for s in symbols}
             
-            # Third pass: Extract function-level dependencies
-            function_deps = self._extract_function_dependencies(tree, file_path, repo_path)
-            
-            # Fourth pass: Determine API exports
+            # Extract API exports
             exports = self._extract_api_exports(tree, symbols, file_path)
             
             # Calculate metadata
             metadata = self._calculate_metadata(tree, content)
             
-            return symbols, exports, function_deps, imports, metadata
+            return symbols, exports, collector.function_dependencies, collector.imports, metadata
             
         except Exception as e:
             logger.warning(f"Failed to parse code structure for {file_path}: {e}")

@@ -36,7 +36,36 @@ class Language(str, Enum):
 
 @dataclass(frozen=True)
 class CodeSymbol:
-    """Represents a function, class, or other code symbol."""
+    """Represents a function, class, or other code symbol.
+    
+    This class captures detailed information about code symbols including
+    their location, signature, documentation, and export status. Used by
+    AI agents to understand code structure and relationships.
+    
+    Attributes:
+        name: The symbol name as it appears in code
+        symbol_type: Type of symbol ('function', 'class', 'variable', 'import')
+        line_start: Starting line number in source file
+        line_end: Ending line number in source file
+        signature: Full signature for functions/classes
+        docstring: Documentation string if present
+        is_exported: True if part of public API
+        is_private: True if starts with underscore
+        decorators: List of decorator names applied to symbol
+        parent: Parent symbol name for nested definitions
+        
+    Examples:
+        >>> symbol = CodeSymbol(
+        ...     name="analyze_repository", 
+        ...     symbol_type="function",
+        ...     line_start=42,
+        ...     line_end=58,
+        ...     signature="def analyze_repository(path: Path) -> AnalysisResult",
+        ...     is_exported=True
+        ... )
+        >>> print(symbol.name)
+        analyze_repository
+    """
     
     name: str = field()
     symbol_type: str = field()  # 'function', 'class', 'variable', 'import'

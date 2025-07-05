@@ -1,10 +1,13 @@
 """Command-line interface for IntentGraph."""
 
+# Standard library imports
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
+# Third-party imports
 import click
 import typer
 from rich.console import Console
@@ -12,6 +15,7 @@ from rich.logging import RichHandler
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
+# Local imports
 from .application.analyzer import RepositoryAnalyzer
 from .domain.exceptions import CyclicDependencyError, IntentGraphError
 from .domain.models import Language
@@ -25,27 +29,30 @@ console = Console()
 
 
 def validate_languages_input(value: str | None) -> str | None:
-    """Validate languages input parameter."""
+    """Validate languages input parameter with Unicode normalization."""
     if value is None:
         return None
-
+    
+    # Normalize Unicode to prevent bypass attempts
+    normalized = unicodedata.normalize('NFKC', value)
+    
     # Check for reasonable length
-    if len(value) > 100:
+    if len(normalized) > 100:
         raise typer.BadParameter("Languages string too long")
-
-    # Check for valid characters only
-    if not re.match(r'^[a-zA-Z,\s]+$', value):
+    
+    # Enhanced character validation
+    if not re.match(r'^[a-zA-Z,\s]+$', normalized):
         raise typer.BadParameter("Languages string contains invalid characters")
-
+    
     # Validate individual language codes
     valid_languages = {'py', 'js', 'ts', 'go', 'python', 'javascript', 'typescript', 'golang'}
-    languages = [lang.strip().lower() for lang in value.split(',')]
-
+    languages = [lang.strip().lower() for lang in normalized.split(',')]
+    
     for lang in languages:
         if lang and lang not in valid_languages:
             raise typer.BadParameter(f"Unknown language: {lang}")
-
-    return value
+    
+    return normalized
 
 
 @app.command()

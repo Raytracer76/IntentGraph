@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.12"
 authors = [
-    {name = "IntentGraph Team", email = "intentgraph-security@example.com"},
+    {name = "IntentGraph Team", email = "security@intentgraph.dev"},
 ]
 keywords = ["dependency", "analysis", "graph", "repository", "code"]
 classifiers = [
@@ -24,18 +24,16 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
-    "typer>=0.12.0",
-    "rich>=13.7.0",
-    "click>=8.0.0",
-    "pathspec>=0.12.0",
-    "grimp>=3.3.0",
-    "tree-sitter>=0.23.0",
-    "tree-sitter-language-pack>=0.8.0",
-    "networkx>=3.2.0",
-    "orjson>=3.9.0",
-    "pydantic>=2.5.0",
-    "anyio>=4.2.0",
-    "gitpython>=3.1.40",
+    "typer>=0.12.0,<1.0.0",
+    "rich>=13.7.0,<14.0.0",
+    "click>=8.0.0,<9.0.0",
+    "pathspec>=0.12.0,<1.0.0",
+    "grimp>=3.3.0,<4.0.0",
+    "tree-sitter-language-pack>=0.8.0,<1.0.0",
+    "networkx>=3.2.0,<4.0.0",
+    "orjson>=3.9.0,<4.0.0",
+    "pydantic>=2.5.0,<3.0.0",
+    "gitpython>=3.1.41,<4.0.0",
 ]
 
 [project.optional-dependencies]
@@ -53,9 +51,9 @@ dev = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/yourusername/intentgraph"
-Issues = "https://github.com/yourusername/intentgraph/issues"
-Source = "https://github.com/yourusername/intentgraph"
+Documentation = "https://github.com/intentgraph/intentgraph"
+Issues = "https://github.com/intentgraph/intentgraph/issues"
+Source = "https://github.com/intentgraph/intentgraph"
 
 [project.scripts]
 intentgraph = "intentgraph.cli:main"

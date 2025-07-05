@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import subprocess
 from pathlib import Path
 
@@ -11,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class GoParser(LanguageParser):
-    """Parser for Go files using go list command."""
+    """Parser for Go files using go list command with caching."""
+
+    def __init__(self):
+        self.go_list_cache = {}
+        self.package_cache = {}
 
     def extract_dependencies(self, file_path: Path, repo_path: Path) -> list[str]:
         """Extract Go dependencies using go list."""
@@ -21,28 +26,37 @@ class GoParser(LanguageParser):
             # Validate and resolve repo_path
             validated_repo_path = self._validate_repo_path(repo_path)
 
-            # Run go list to get package information
-            result = subprocess.run(
-                ['go', 'list', '-json', './...'],
-                check=False, cwd=validated_repo_path,
-                capture_output=True,
-                text=True,
-                timeout=30,
-            )
+            # Check cache first
+            cache_key = str(validated_repo_path)
+            if cache_key not in self.go_list_cache:
+                # Run go list to get package information with sanitized environment
+                sanitized_env = self._sanitize_environment()
+                result = subprocess.run(
+                    ['go', 'list', '-json', './...'],
+                    check=False, cwd=validated_repo_path,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                    env=sanitized_env,
+                )
 
-            if result.returncode != 0:
-                logger.warning(f"go list failed: {result.stderr}")
-                return []
+                if result.returncode != 0:
+                    logger.warning(f"go list failed: {result.stderr}")
+                    return []
 
-            # Parse JSON output
-            packages = []
-            for line in result.stdout.strip().split('\n'):
-                if line.strip():
-                    try:
-                        pkg_info = json.loads(line)
-                        packages.append(pkg_info)
-                    except json.JSONDecodeError:
-                        continue
+                # Parse JSON output and cache
+                packages = []
+                for line in result.stdout.strip().split('\n'):
+                    if line.strip():
+                        try:
+                            pkg_info = json.loads(line)
+                            packages.append(pkg_info)
+                        except json.JSONDecodeError:
+                            continue
+                
+                self.go_list_cache[cache_key] = packages
+            else:
+                packages = self.go_list_cache[cache_key]
 
             # Find the package containing our file
             relative_path = file_path.relative_to(repo_path)
@@ -119,3 +133,16 @@ class GoParser(LanguageParser):
     def _get_init_files(self) -> list[str]:
         """Get Go initialization files."""
         return []
+
+    def _sanitize_environment(self) -> dict[str, str]:
+        """Create sanitized environment for subprocess execution."""
+        safe_env = {
+            'PATH': os.environ.get('PATH', ''),
+            'HOME': os.environ.get('HOME', ''),
+            'GOPATH': os.environ.get('GOPATH', ''),
+            'GOROOT': os.environ.get('GOROOT', ''),
+            'GO111MODULE': os.environ.get('GO111MODULE', 'on'),
+            'GOPROXY': os.environ.get('GOPROXY', 'https://proxy.golang.org,direct'),
+            'GOSUMDB': os.environ.get('GOSUMDB', 'sum.golang.org'),
+        }
+        return {k: v for k, v in safe_env.items() if v}
