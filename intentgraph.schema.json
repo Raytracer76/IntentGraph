@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IntentGraph Analysis Result",
+  "description": "Schema for IntentGraph repository dependency analysis results",
+  "type": "object",
+  "properties": {
+    "analyzed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp when the analysis was performed"
+    },
+    "root": {
+      "type": "string",
+      "description": "Absolute path to the repository root"
+    },
+    "language_summary": {
+      "type": "object",
+      "description": "Summary statistics by programming language",
+      "patternProperties": {
+        "^(python|javascript|typescript|go|unknown)$": {
+          "type": "object",
+          "properties": {
+            "file_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of files for this language"
+            },
+            "total_bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total size in bytes for this language"
+            }
+          },
+          "required": ["file_count", "total_bytes"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "array",
+      "description": "List of analyzed files",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the file"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path from repository root"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["python", "javascript", "typescript", "go", "unknown"],
+            "description": "Programming language of the file"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA256 hash of file contents"
+          },
+          "loc": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Lines of code (excluding comments and empty lines)"
+          },
+          "dependencies": {
+            "type": "array",
+            "description": "List of file IDs that this file depends on",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": ["id", "path", "language", "sha256", "loc", "dependencies"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["analyzed_at", "root", "language_summary", "files"],
+  "additionalProperties": false
+}

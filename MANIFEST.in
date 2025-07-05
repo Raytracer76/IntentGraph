@@ -1,0 +1,20 @@
+# Include additional files in the distribution package
+include README.md
+include LICENSE
+include intentgraph.schema.json
+include requirements.txt
+include requirements-dev.txt
+
+# Include documentation
+recursive-include docs *.md
+
+# Include tests
+recursive-include tests *.py
+
+# Exclude development files
+exclude setup.py
+exclude MANIFEST.in
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .pytest_cache
+global-exclude .coverage

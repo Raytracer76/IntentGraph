@@ -1,0 +1,39 @@
+# Development dependencies for IntentGraph
+# Install with: pip install -r requirements-dev.txt
+
+# Include production dependencies
+-r requirements.txt
+
+# Testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.23.0
+
+# Property-based testing
+hypothesis>=6.92.0
+
+# Type checking
+mypy>=1.8.0
+
+# Linting and formatting
+ruff>=0.1.9
+
+# Security scanning
+bandit>=1.7.5
+
+# Performance profiling
+pyinstrument>=4.6.0
+
+# Documentation
+mkdocs-material>=9.5.0
+
+# Architecture diagrams
+diagrams>=0.23.0
+
+# JSON schema validation (optional)
+jsonschema>=4.17.0
+
+# Build tools
+hatch>=1.9.0
+build>=1.0.0
+twine>=4.0.0

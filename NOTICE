@@ -1,0 +1,10 @@
+NOTICE
+
+This project includes the following third-party components:
+
+pathspec (>=0.12.0)
+Copyright (c) 2013-2024 pathspec contributors
+Licensed under Mozilla Public License 2.0
+Source: https://github.com/cpburnz/python-pathspec
+
+For full license text, see: https://mozilla.org/MPL/2.0/
