@@ -1,20 +1,48 @@
-# IntentGraph 🧠
+# IntentGraph 🧬
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-**AI-Ready Codebase Intelligence** - Transform any codebase into rich, queryable intelligence optimized for AI token limits and agent workflows.
+**Your Codebase's Genome** - Pre-digested, structured, AI-optimized intelligence that unlocks true autonomous coding agents.
 
-## 🎯 **Why IntentGraph?**
+## 🧠 **Built for the GPT-4+ Era**
 
-AI coding agents are everywhere, but they're **flying blind** through codebases:
-- ❌ Constantly scanning files to understand structure
-- ❌ Missing function-level relationships
-- ❌ No semantic understanding of code purpose
-- ❌ Reinventing analysis on every interaction
+LLMs like GPT-4o and Claude 3.5 are powerful—but **limited by context**. They can understand structure, but not without intelligent input.
 
-**IntentGraph solves this** by providing comprehensive codebase intelligence upfront.
+**The Problem**: Tool builders are struggling to make codebases context-fit into limited tokens (~200KB).
+
+**The Solution**: IntentGraph feeds them pre-digested codebase intelligence to enable true autonomous coding.
+
+## 🎯 **Who This Is For**
+
+### 🏗️ **Primary: Platform Builders** 
+Building the next generation of AI coding tools? IntentGraph is your foundational intelligence layer:
+- **IDE Extensions** (VS Code, Cursor, etc.) - Smart navigation and completion
+- **AI Coding Agents** (GitHub Copilot, CodeT5, etc.) - Context-aware code understanding
+- **Developer Platforms** - Embedded codebase intelligence APIs
+
+### 🤖 **Secondary: AI Tool Builders**
+Creating specialized coding agents or analysis tools:
+- **Code Review Automation** - Quality assessment and pattern detection
+- **Refactoring Tools** - Safe transformation guidance with dependency awareness
+- **Documentation Generators** - API surface extraction and architectural mapping
+
+### 👨‍💻 **Tertiary: Individual Developers**
+Direct usage for productivity and codebase understanding:
+- **Large Codebase Navigation** - Intelligent clustering for massive repos
+- **Technical Debt Assessment** - Quantified code quality metrics
+- **Onboarding Acceleration** - Rapid understanding of unfamiliar codebases
+
+## ⚡ **The Challenge IntentGraph Solves**
+
+Traditional approaches fail with modern codebases:
+- ❌ **File scanning**: Constantly re-analyzing to understand structure
+- ❌ **Missing relationships**: No function-level dependency tracking
+- ❌ **Token explosion**: Large codebases exceed AI context limits
+- ❌ **No semantics**: Tools can't understand code purpose or patterns
+
+**IntentGraph provides comprehensive intelligence upfront** - your codebase's structured genome.
 
 ## ✨ **What Makes It Special**
 
@@ -72,12 +100,17 @@ pip install intentgraph
 # Analyze current directory (AI-friendly minimal output ~10KB)
 intentgraph .
 
+# Generate cluster analysis (outputs to .intentgraph/ by default)
+intentgraph . --cluster
+
 # Generate detailed report
 intentgraph . --output analysis.json
 
 # Focus on specific languages
 intentgraph . --lang py,js,ts
 ```
+
+💡 **Pro tip**: Add `.intentgraph/` to your `.gitignore` - it's generated output like `.pytest_cache/`
 
 ### **🤖 AI-Optimized Output Levels**
 IntentGraph offers three output levels optimized for different use cases:
@@ -107,25 +140,52 @@ For massive repositories that exceed AI token limits even with minimal output, I
 ```bash
 # Break large codebase into manageable clusters
 intentgraph . --cluster --cluster-mode analysis --cluster-size 15KB
-
-# Different clustering strategies for different use cases
-intentgraph . --cluster --cluster-mode refactoring --cluster-size 10KB
-intentgraph . --cluster --cluster-mode navigation --cluster-size 20KB
 ```
 
-**Cluster Modes:**
-- **`analysis`** - Dependency-based clustering for code understanding
-- **`refactoring`** - Feature-based clustering for making targeted changes  
-- **`navigation`** - Size-optimized clustering for large codebase exploration
-
-**Output Structure:**
+**Visual Flow:**
 ```
-output/
-├── index.json          # Master navigation index
-├── domain.json         # Core domain models cluster
-├── application.json    # Application services cluster
-├── adapters.json       # External interfaces cluster
-└── utilities.json      # Helper functions cluster
+🏢 Large Codebase (2MB+) ─┬─🧩 Clustering ─┬─📁 domain.json (15KB)
+                          │                 ├─📁 adapters.json (12KB) 
+                          │                 ├─📁 utilities.json (14KB)
+                          └─📋 index.json ──┴─📁 application.json (13KB)
+                             (AI Navigation Map)
+```
+
+**Real AI Agent Workflow:**
+```
+🤖 "I need to fix a bug in the billing logic"
+
+1️⃣ AI reads index.json first:
+   "cluster_recommendations": {
+     "finding_bugs": ["domain", "utilities"]
+   }
+
+2️⃣ AI loads domain.json:
+   Contains: billing_service.py, payment_models.py
+   
+3️⃣ AI identifies issue and fixes bug
+   Without ever loading the entire 2MB codebase!
+```
+
+**Three Clustering Strategies:**
+
+| Mode | Strategy | Best For | Example Use Case |
+|------|----------|----------|------------------|
+| **`analysis`** | Dependency-based | Code understanding | 🧠 "Help me understand this codebase" |
+| **`refactoring`** | Feature-based | Targeted changes | ⚡ "Refactor the authentication system" |  
+| **`navigation`** | Size-optimized | Large repo exploration | 🗺️ "Find all API endpoints in this 10MB repo" |
+
+**Cluster Output Structure:**
+```
+.intentgraph/              # Default output (gitignore-friendly)
+├── index.json            # 🧭 AI Navigation Map
+│   ├── cluster_recommendations: {"finding_bugs": ["domain"]}
+│   ├── cross_cluster_dependencies: [...]
+│   └── file_to_cluster_map: {...}
+├── domain.json           # 🏗️ Core business logic
+├── adapters.json         # 🔌 External interfaces  
+├── application.json      # ⚙️ Application services
+└── utilities.json        # 🛠️ Helper functions
 ```
 
 **Smart Index for AI Navigation:**
@@ -282,6 +342,8 @@ IntentGraph follows **Clean Architecture** principles:
 
 **Coming Soon:** Enhanced analysis for JavaScript, TypeScript, Go, Rust, Java
 
+📚 **[Complete Language Support Guide →](docs/language_support.md)**
+
 ## ⚙️ **Configuration**
 
 ### **Command Line Options**
@@ -383,56 +445,25 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## 🎯 **Use Cases**
 
-### **For AI Agents**
-```python
-# Perfect for AI agents - default minimal output fits any token limit
-analysis = intentgraph.analyze(repo_path)  # ~10KB output
+### **🏗️ Platform Builders**
+Embed IntentGraph into your AI coding platform:
+- **IDE Extensions** - Smart navigation, completion, refactoring assistance
+- **AI Coding Agents** - Context-aware code understanding and generation  
+- **Developer Platforms** - Codebase intelligence APIs for your tools
 
-# For detailed AI analysis tasks  
-analysis = intentgraph.analyze(repo_path, level="medium")  # ~70KB output
+### **🤖 AI Tool Builders** 
+Build specialized coding agents and analysis tools:
+- **Code Review Automation** - Quality assessment and pattern detection
+- **Refactoring Assistants** - Safe transformation with dependency awareness
+- **Documentation Generators** - API extraction and architectural mapping
 
-# For massive codebases - intelligent clustering
-cluster_result = intentgraph.cluster(repo_path, mode="analysis")
+### **👨‍💻 Individual Developers**
+Direct productivity and understanding:
+- **Large Codebase Navigation** - Intelligent clustering for massive repos
+- **Technical Debt Assessment** - Quantified quality metrics and improvement guidance
+- **Team Onboarding** - Rapid understanding of unfamiliar codebases
 
-# AI reads index.json first to understand structure
-with open("analysis/index.json") as f:
-    index = json.load(f)
-
-# Then loads specific clusters based on task
-target_clusters = index["cluster_recommendations"]["making_changes"]
-for cluster_id in target_clusters:
-    with open(f"analysis/{cluster_id}.json") as f:
-        cluster_data = json.load(f)
-    # Process cluster_data...
-
-# Now AI knows:
-# - Which functions call which (no file scanning)
-# - Public APIs vs internal implementation  
-# - Code complexity and quality metrics
-# - Architectural patterns and purposes
-# - Smart navigation strategy for large codebases
-```
-
-### **For Developer Tools**
-```python
-# Code review automation
-high_complexity = [f for f in analysis.files if f.complexity_score > 10]
-
-# Architecture compliance  
-missing_patterns = find_files_without_patterns(analysis, required=['adapter'])
-
-# Refactoring safety
-impact = find_function_dependencies(analysis, target_function="process_data")
-```
-
-### **For Documentation**
-```python
-# Auto-generate API docs
-public_apis = [e for f in analysis.files for e in f.exports if not e.name.startswith('_')]
-
-# Architecture diagrams
-dependency_graph = build_graph(analysis.function_dependencies)
-```
+🤖 **[Complete AI Agent Workflow Guide →](docs/agent_workflows.md)**
 
 ## 🏆 **Why Choose IntentGraph**
 

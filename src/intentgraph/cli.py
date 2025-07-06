@@ -24,7 +24,7 @@ from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
 
 app = typer.Typer(
     name="intentgraph",
-    help="A best-in-class repository dependency analyzer",
+    help="🧬 Your Codebase's Genome - AI-optimized intelligence for autonomous coding agents",
     no_args_is_help=True,
 )
 console = Console()
@@ -120,7 +120,14 @@ def filter_result_by_level(result: AnalysisResult, level: str) -> dict:
     return filtered_result
 
 
-@app.command()
+@app.command(
+    epilog="💡 Pro tips:\n"
+           "  • Default output (~10KB) fits any AI context window\n"
+           "  • Use --cluster for massive repos (outputs to .intentgraph/)\n"
+           "  • Add .intentgraph/ to your .gitignore\n"
+           "  • Start with --level minimal for AI agents\n\n"
+           "📚 Full documentation: https://github.com/Raytracer76/intentgraph"
+)
 def analyze(
     repository_path: Path = typer.Argument(
         ...,
@@ -166,18 +173,18 @@ def analyze(
     level: str = typer.Option(
         "minimal",
         "--level",
-        help="Analysis detail level: minimal (~10KB, AI-friendly), medium (~70KB, balanced), full (~340KB, complete)",
+        help="🤖 Output level: minimal (~10KB, perfect for AI agents), medium (~70KB, detailed analysis), full (~340KB, comprehensive audit)",
         click_type=click.Choice(["minimal", "medium", "full"]),
     ),
     cluster: bool = typer.Option(
         False,
         "--cluster",
-        help="Enable cluster mode for large codebase navigation",
+        help="🧩 Enable intelligent clustering for massive repos (outputs to .intentgraph/ by default)",
     ),
     cluster_mode: str = typer.Option(
         "analysis",
         "--cluster-mode",
-        help="Clustering strategy: analysis (dependency-based), refactoring (feature-based), navigation (size-optimized)",
+        help="🎯 Clustering strategy: analysis (understand code), refactoring (make changes), navigation (explore large repos)",
         click_type=click.Choice(["analysis", "refactoring", "navigation"]),
     ),
     cluster_size: str = typer.Option(
@@ -275,7 +282,36 @@ def analyze(
             cluster_result = clustering_engine.cluster_repository(result)
             
             # Handle cluster output
-            if output is None or str(output) == "-":
+            if output is None:
+                # Default to .intentgraph/ directory (gitignore-friendly)
+                output_dir = repository_path / ".intentgraph"
+                output_dir.mkdir(exist_ok=True)
+                
+                # Write index and cluster files to default directory
+                index_path = output_dir / "index.json"
+                index_json = json.dumps(
+                    cluster_result.index.model_dump(),
+                    indent=2 if output_format == "pretty" else None,
+                    ensure_ascii=False,
+                    default=str
+                )
+                index_path.write_text(index_json, encoding="utf-8")
+                
+                # Write cluster files
+                for cluster_id, cluster_data in cluster_result.cluster_files.items():
+                    cluster_path = output_dir / f"{cluster_id}.json"
+                    cluster_json = json.dumps(
+                        cluster_data,
+                        indent=2 if output_format == "pretty" else None,
+                        ensure_ascii=False,
+                        default=str
+                    )
+                    cluster_path.write_text(cluster_json, encoding="utf-8")
+                
+                console.print(f"[green]Cluster analysis complete![/green] Results written to {output_dir}")
+                console.print(f"📁 Generated {len(cluster_result.cluster_files)} clusters + index.json")
+                
+            elif str(output) == "-":
                 # Output index to stdout for cluster mode
                 index_json = json.dumps(
                     cluster_result.index.model_dump(),
