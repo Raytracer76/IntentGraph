@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-**AI-Ready Codebase Intelligence** - Transform any codebase into rich, queryable intelligence for AI coding agents and developer tools.
+**AI-Ready Codebase Intelligence** - Transform any codebase into rich, queryable intelligence optimized for AI token limits and agent workflows.
 
 ## 🎯 **Why IntentGraph?**
 
@@ -69,7 +69,7 @@ pip install intentgraph
 
 ### **Basic Usage**
 ```bash
-# Analyze current directory
+# Analyze current directory (AI-friendly minimal output ~10KB)
 intentgraph .
 
 # Generate detailed report
@@ -78,6 +78,28 @@ intentgraph . --output analysis.json
 # Focus on specific languages
 intentgraph . --lang py,js,ts
 ```
+
+### **🤖 AI-Optimized Output Levels**
+IntentGraph offers three output levels optimized for different use cases:
+
+```bash
+# Minimal: ~10KB, perfect for AI agents (DEFAULT)
+intentgraph . --level minimal
+
+# Medium: ~70KB, balanced analysis for complex AI tasks  
+intentgraph . --level medium
+
+# Full: ~340KB, comprehensive analysis for audits
+intentgraph . --level full
+```
+
+| Level | Size | Best For | Contains |
+|-------|------|----------|----------|
+| **minimal** | ~10KB | AI agents, quick analysis | Paths, dependencies, imports, basic metrics |
+| **medium** | ~70KB | Detailed AI tasks, code review | + Key symbols, exports, maintainability scores |
+| **full** | ~340KB | Comprehensive audits | Complete analysis with all metadata |
+
+**Why this matters:** AI agents have token limits (~200KB). Minimal output ensures your entire codebase intelligence fits in any AI context window.
 
 ### **Sample Output**
 ```bash
@@ -216,6 +238,10 @@ intentgraph [OPTIONS] REPOSITORY_PATH
 
 Options:
   -o, --output FILE           Output file (- for stdout) [default: stdout]
+  --level [minimal|medium|full] Analysis detail level [default: minimal]
+                             minimal (~10KB, AI-friendly)
+                             medium (~70KB, balanced) 
+                             full (~340KB, complete)
   --lang TEXT                 Languages to analyze [default: auto-detect]
   --include-tests            Include test files in analysis
   --format [pretty|compact]  JSON output format [default: pretty]
@@ -294,8 +320,11 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ### **For AI Agents**
 ```python
-# Cursor, Claude Code, GitHub Copilot, etc.
-analysis = intentgraph.analyze(repo_path)
+# Perfect for AI agents - default minimal output fits any token limit
+analysis = intentgraph.analyze(repo_path)  # ~10KB output
+
+# For detailed AI analysis tasks  
+analysis = intentgraph.analyze(repo_path, level="medium")  # ~70KB output
 
 # Now AI knows:
 # - Which functions call which (no file scanning)
@@ -331,7 +360,8 @@ dependency_graph = build_graph(analysis.function_dependencies)
 |---------|-------------|-------------------------|-----------|-------------|
 | **Function-level deps** | ✅ | ❌ | ❌ | ❌ |
 | **Semantic analysis** | ✅ | ❌ | ❌ | ❌ |
-| **AI-optimized output** | ✅ | ❌ | ❌ | ❌ |
+| **AI-optimized output** | ✅ (3 levels) | ❌ | ❌ | ❌ |
+| **Token limit friendly** | ✅ (~10KB) | ❌ | ❌ | ❌ |
 | **Multi-language unified** | ✅ | ✅ | ✅ | ❌ |
 | **Quality metrics** | ✅ | ❌ | ✅ | ❌ |
 | **Design patterns** | ✅ | ❌ | ❌ | ❌ |

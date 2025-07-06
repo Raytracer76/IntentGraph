@@ -1,5 +1,7 @@
 """Basic usage examples for IntentGraph repository analysis."""
 
+import json
+import subprocess
 from pathlib import Path
 from intentgraph import RepositoryAnalyzer
 from intentgraph.domain.models import Language
@@ -64,6 +66,50 @@ def analyze_incremental():
     print(f"Incremental analysis: {len(result.files)} files")
 
 
+def demonstrate_output_levels():
+    """Demonstrate the three AI-optimized output levels."""
+    print("\n🤖 AI-Optimized Output Levels:")
+    
+    levels = ["minimal", "medium", "full"]
+    
+    for level in levels:
+        print(f"\n--- {level.upper()} Level (--level {level}) ---")
+        
+        # Use CLI to demonstrate actual output
+        result = subprocess.run([
+            "intentgraph", ".", 
+            "--level", level,
+            "--format", "compact"
+        ], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            # Calculate size
+            size_kb = len(result.stdout.encode('utf-8')) / 1024
+            analysis = json.loads(result.stdout)
+            
+            print(f"Size: {size_kb:.1f}KB")
+            print(f"Files: {len(analysis.get('files', []))}")
+            
+            # Show sample of first file
+            if analysis.get('files'):
+                first_file = analysis['files'][0]
+                print(f"Sample file: {first_file.get('path', 'unknown')}")
+                
+                # Show what's included at this level
+                if level == "minimal":
+                    print(f"  Imports: {len(first_file.get('imports', []))}")
+                    print(f"  Complexity: {first_file.get('complexity_score', 0)}")
+                elif level == "medium":
+                    print(f"  Symbols: {len(first_file.get('symbols', []))}")
+                    print(f"  Exports: {len(first_file.get('exports', []))}")
+                    print(f"  Maintainability: {first_file.get('maintainability_index', 0)}")
+                else:  # full
+                    print(f"  Complete metadata available")
+                    print(f"  Design patterns: {first_file.get('design_patterns', [])}")
+        else:
+            print(f"Error: {result.stderr}")
+
+
 def extract_detailed_info():
     """Extract detailed code structure information."""
     analyzer = RepositoryAnalyzer()
@@ -83,7 +129,12 @@ def extract_detailed_info():
 
 
 if __name__ == "__main__":
-    print("=== Basic Analysis ===")
+    print("=== IntentGraph Usage Examples ===")
+    
+    print("\n=== AI-Optimized Output Levels ===")
+    demonstrate_output_levels()
+    
+    print("\n=== Basic Analysis ===")
     analyze_repository_basic()
     
     print("\n=== Analysis with Options ===")
