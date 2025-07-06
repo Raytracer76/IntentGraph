@@ -18,7 +18,7 @@ from rich.table import Table
 # Local imports
 from .application.analyzer import RepositoryAnalyzer
 from .domain.exceptions import CyclicDependencyError, IntentGraphError
-from .domain.models import Language
+from .domain.models import Language, AnalysisResult, FileInfo
 
 app = typer.Typer(
     name="intentgraph",
@@ -53,6 +53,69 @@ def validate_languages_input(value: str | None) -> str | None:
             raise typer.BadParameter(f"Unknown language: {lang}")
     
     return normalized
+
+
+def filter_result_by_level(result: AnalysisResult, level: str) -> dict:
+    """Filter analysis result based on detail level for AI-friendly output."""
+    
+    if level == "full":
+        return result.model_dump()
+    
+    # Start with basic structure
+    filtered_result = {
+        "analyzed_at": result.analyzed_at,
+        "root": str(result.root),
+        "language_summary": {str(k): v.model_dump() for k, v in result.language_summary.items()},
+        "files": []
+    }
+    
+    for file_info in result.files:
+        if level == "minimal":
+            # Minimal: paths, language, dependencies, imports, basic metrics only
+            filtered_file = {
+                "path": str(file_info.path),
+                "language": file_info.language,
+                "dependencies": [str(dep) for dep in file_info.dependencies],
+                "imports": file_info.imports,
+                "loc": file_info.loc,
+                "complexity_score": file_info.complexity_score,
+            }
+        
+        elif level == "medium":
+            # Medium: add key symbols, exports, detailed metrics
+            filtered_file = {
+                "path": str(file_info.path),
+                "language": file_info.language,
+                "dependencies": [str(dep) for dep in file_info.dependencies],
+                "imports": file_info.imports,
+                "loc": file_info.loc,
+                "complexity_score": file_info.complexity_score,
+                "maintainability_index": file_info.maintainability_index,
+                # Include only key symbols (classes and main functions)
+                "symbols": [
+                    {
+                        "name": symbol.name,
+                        "symbol_type": symbol.symbol_type,
+                        "line_start": symbol.line_start,
+                        "is_exported": getattr(symbol, 'is_exported', False),
+                    }
+                    for symbol in file_info.symbols
+                    if symbol.symbol_type in ["class", "function"] and 
+                       (symbol.name.startswith("_") == False or symbol.symbol_type == "class")
+                ],
+                "exports": [
+                    {
+                        "name": export.name,
+                        "export_type": export.export_type,
+                    }
+                    for export in file_info.exports
+                ],
+                "file_purpose": file_info.file_purpose,
+            }
+        
+        filtered_result["files"].append(filtered_file)
+    
+    return filtered_result
 
 
 @app.command()
@@ -97,6 +160,12 @@ def analyze(
         0,
         "--workers",
         help="Number of parallel workers (0 = auto)",
+    ),
+    level: str = typer.Option(
+        "minimal",
+        "--level",
+        help="Analysis detail level: minimal (~10KB, AI-friendly), medium (~70KB, balanced), full (~340KB, complete)",
+        click_type=click.Choice(["minimal", "medium", "full"]),
     ),
     debug: bool = typer.Option(
         False,
@@ -161,11 +230,14 @@ def analyze(
                     console.print(f"  {i}. {' -> '.join(str(analyzer.graph.get_file_info(f).path) for f in cycle)}")
                 raise CyclicDependencyError(cycles)
 
+        # Apply level filtering
+        filtered_result = filter_result_by_level(result, level)
+        
         # Format output
         if output_format == "pretty":
-            result_json = json.dumps(result.model_dump(), indent=2, ensure_ascii=False, default=str)
+            result_json = json.dumps(filtered_result, indent=2, ensure_ascii=False, default=str)
         else:
-            result_json = json.dumps(result.model_dump(), ensure_ascii=False, default=str)
+            result_json = json.dumps(filtered_result, ensure_ascii=False, default=str)
 
         # Write output
         if output is None or str(output) == "-":
