@@ -101,6 +101,58 @@ intentgraph . --level full
 
 **Why this matters:** AI agents have token limits (~200KB). Minimal output ensures your entire codebase intelligence fits in any AI context window.
 
+### **🧩 Intelligent Clustering for Large Codebases**
+For massive repositories that exceed AI token limits even with minimal output, IntentGraph offers intelligent clustering:
+
+```bash
+# Break large codebase into manageable clusters
+intentgraph . --cluster --cluster-mode analysis --cluster-size 15KB
+
+# Different clustering strategies for different use cases
+intentgraph . --cluster --cluster-mode refactoring --cluster-size 10KB
+intentgraph . --cluster --cluster-mode navigation --cluster-size 20KB
+```
+
+**Cluster Modes:**
+- **`analysis`** - Dependency-based clustering for code understanding
+- **`refactoring`** - Feature-based clustering for making targeted changes  
+- **`navigation`** - Size-optimized clustering for large codebase exploration
+
+**Output Structure:**
+```
+output/
+├── index.json          # Master navigation index
+├── domain.json         # Core domain models cluster
+├── application.json    # Application services cluster
+├── adapters.json       # External interfaces cluster
+└── utilities.json      # Helper functions cluster
+```
+
+**Smart Index for AI Navigation:**
+```json
+{
+  "clusters": [
+    {
+      "cluster_id": "domain",
+      "name": "Domain Layer", 
+      "description": "Core business logic and models",
+      "file_count": 5,
+      "total_size_kb": 12.4,
+      "primary_concerns": ["data_models", "business_rules"],
+      "complexity_score": 15
+    }
+  ],
+  "cluster_recommendations": {
+    "understanding_codebase": ["domain", "application"],
+    "making_changes": ["adapters", "application"],
+    "finding_bugs": ["utilities", "domain"],
+    "adding_features": ["application", "adapters"]
+  }
+}
+```
+
+**Revolutionary for AI Agents:** Instead of cramming everything into context, AI agents intelligently navigate clusters based on their specific task!
+
 ### **Sample Output**
 ```bash
 [2025-01-15 10:30:14] INFO     Found 42 source files                              
@@ -236,7 +288,7 @@ IntentGraph follows **Clean Architecture** principles:
 ```bash
 intentgraph [OPTIONS] REPOSITORY_PATH
 
-Options:
+Analysis Options:
   -o, --output FILE           Output file (- for stdout) [default: stdout]
   --level [minimal|medium|full] Analysis detail level [default: minimal]
                              minimal (~10KB, AI-friendly)
@@ -248,6 +300,19 @@ Options:
   --show-cycles              Print dependency cycles and exit with code 2
   --workers INTEGER          Parallel workers [default: CPU count]
   --debug                    Enable debug logging
+
+Clustering Options:
+  --cluster                  Enable cluster mode for large codebase navigation
+  --cluster-mode [analysis|refactoring|navigation]
+                             Clustering strategy [default: analysis]
+                             analysis: dependency-based grouping
+                             refactoring: feature-based grouping
+                             navigation: size-optimized grouping
+  --cluster-size [10KB|15KB|20KB]
+                             Target cluster size [default: 15KB]
+  --index-level [basic|rich] Index detail level [default: rich]
+                             basic: simple file mapping
+                             rich: full metadata with AI recommendations
 ```
 
 ### **Programmatic Usage**
@@ -326,11 +391,26 @@ analysis = intentgraph.analyze(repo_path)  # ~10KB output
 # For detailed AI analysis tasks  
 analysis = intentgraph.analyze(repo_path, level="medium")  # ~70KB output
 
+# For massive codebases - intelligent clustering
+cluster_result = intentgraph.cluster(repo_path, mode="analysis")
+
+# AI reads index.json first to understand structure
+with open("analysis/index.json") as f:
+    index = json.load(f)
+
+# Then loads specific clusters based on task
+target_clusters = index["cluster_recommendations"]["making_changes"]
+for cluster_id in target_clusters:
+    with open(f"analysis/{cluster_id}.json") as f:
+        cluster_data = json.load(f)
+    # Process cluster_data...
+
 # Now AI knows:
 # - Which functions call which (no file scanning)
 # - Public APIs vs internal implementation  
 # - Code complexity and quality metrics
 # - Architectural patterns and purposes
+# - Smart navigation strategy for large codebases
 ```
 
 ### **For Developer Tools**
@@ -362,6 +442,8 @@ dependency_graph = build_graph(analysis.function_dependencies)
 | **Semantic analysis** | ✅ | ❌ | ❌ | ❌ |
 | **AI-optimized output** | ✅ (3 levels) | ❌ | ❌ | ❌ |
 | **Token limit friendly** | ✅ (~10KB) | ❌ | ❌ | ❌ |
+| **Intelligent clustering** | ✅ (3 modes) | ❌ | ❌ | ❌ |
+| **AI navigation index** | ✅ | ❌ | ❌ | ❌ |
 | **Multi-language unified** | ✅ | ✅ | ✅ | ❌ |
 | **Quality metrics** | ✅ | ❌ | ✅ | ❌ |
 | **Design patterns** | ✅ | ❌ | ❌ | ❌ |

@@ -5,6 +5,56 @@ All notable changes to IntentGraph will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-07-06
+
+### Added
+- **🧩 Intelligent Clustering System**: Revolutionary approach for large codebase navigation and AI agent optimization
+  - `--cluster`: Enable cluster mode for repositories that exceed AI token limits even with minimal output
+  - **Three clustering strategies**:
+    - `--cluster-mode analysis`: Dependency-based clustering for code understanding (with smart overlap)
+    - `--cluster-mode refactoring`: Feature-based clustering for targeted changes (no overlap)
+    - `--cluster-mode navigation`: Size-optimized clustering for large repository exploration
+  - **Flexible sizing**: `--cluster-size 10KB|15KB|20KB` with intelligent constraint handling
+  - **Rich index system**: `--index-level basic|rich` with AI agent recommendations
+
+### Features
+- **Smart Clustering Algorithms**: 
+  - Dependency-based: Groups files by architectural layers and dependency relationships
+  - Feature-based: Groups files by functional domains (parsing, analysis, CLI, models, etc.)
+  - Size-optimized: Balances clusters for optimal AI token utilization
+- **Intelligent Index Generation**: Master index.json with cluster navigation metadata
+- **AI Agent Recommendations**: Pre-computed cluster suggestions for common tasks
+  - `understanding_codebase`: High-level architectural clusters
+  - `making_changes`: Interface and adapter clusters
+  - `finding_bugs`: Complex and utility clusters
+  - `adding_features`: Extensible pattern clusters
+- **Cross-Cluster Dependencies**: Automatic detection of relationships between clusters
+- **Progressive File Output**: Directory structure with index.json + individual cluster files
+
+### Technical Implementation
+- **Domain Models**: Complete clustering types with Pydantic validation (`ClusterConfig`, `ClusterIndex`, `ClusterResult`)
+- **Clustering Engine**: Pluggable algorithms with size constraint management
+- **CLI Integration**: Full parameter validation and rich progress reporting
+- **Output Formats**: Both directory structure and stdout index output support
+
+### Benefits for AI Agents
+- **Unlimited Repository Size**: Break massive codebases into manageable 10-20KB clusters
+- **Smart Navigation**: AI agents use index.json to intelligently select relevant clusters
+- **Task-Optimized**: Different clustering modes for different AI workflows
+- **Preserves Context**: Smart overlap and dependency tracking maintains code relationships
+
+### Examples and Documentation
+- **Comprehensive README**: Updated with clustering documentation and examples
+- **Demo Scripts**: 
+  - `examples/clustering/large_codebase_navigation.py`: Complete clustering workflow demonstration
+  - `examples/clustering/cluster_mode_comparison.py`: Side-by-side mode comparison
+  - `examples/clustering/README.md`: Detailed clustering guide with AI integration patterns
+
+### Performance
+- **Scalable**: Handles repositories of any size with linear memory usage
+- **Deterministic**: Same input produces identical clustering results
+- **Efficient**: Adds only 10-20% to analysis time for clustering computation
+
 ## [0.2.1] - 2025-07-06
 
 ### Added

@@ -17,8 +17,10 @@ from rich.table import Table
 
 # Local imports
 from .application.analyzer import RepositoryAnalyzer
+from .application.clustering import ClusteringEngine
 from .domain.exceptions import CyclicDependencyError, IntentGraphError
 from .domain.models import Language, AnalysisResult, FileInfo
+from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
 
 app = typer.Typer(
     name="intentgraph",
@@ -167,6 +169,29 @@ def analyze(
         help="Analysis detail level: minimal (~10KB, AI-friendly), medium (~70KB, balanced), full (~340KB, complete)",
         click_type=click.Choice(["minimal", "medium", "full"]),
     ),
+    cluster: bool = typer.Option(
+        False,
+        "--cluster",
+        help="Enable cluster mode for large codebase navigation",
+    ),
+    cluster_mode: str = typer.Option(
+        "analysis",
+        "--cluster-mode",
+        help="Clustering strategy: analysis (dependency-based), refactoring (feature-based), navigation (size-optimized)",
+        click_type=click.Choice(["analysis", "refactoring", "navigation"]),
+    ),
+    cluster_size: str = typer.Option(
+        "15KB",
+        "--cluster-size",
+        help="Target cluster size: 10KB, 15KB, 20KB",
+        click_type=click.Choice(["10KB", "15KB", "20KB"]),
+    ),
+    index_level: str = typer.Option(
+        "rich",
+        "--index-level",
+        help="Index detail level: basic (simple mapping), rich (full metadata)",
+        click_type=click.Choice(["basic", "rich"]),
+    ),
     debug: bool = typer.Option(
         False,
         "--debug",
@@ -230,7 +255,81 @@ def analyze(
                     console.print(f"  {i}. {' -> '.join(str(analyzer.graph.get_file_info(f).path) for f in cycle)}")
                 raise CyclicDependencyError(cycles)
 
-        # Apply level filtering
+        # Handle cluster mode or regular analysis
+        if cluster:
+            # Parse cluster configuration
+            cluster_mode_enum = ClusterMode(cluster_mode)
+            index_level_enum = IndexLevel(index_level)
+            target_size_kb = int(cluster_size.replace("KB", ""))
+            
+            # Create cluster configuration
+            cluster_config = ClusterConfig(
+                mode=cluster_mode_enum,
+                target_size_kb=target_size_kb,
+                index_level=index_level_enum,
+                allow_overlap=(cluster_mode_enum == ClusterMode.ANALYSIS)
+            )
+            
+            # Run clustering
+            clustering_engine = ClusteringEngine(cluster_config)
+            cluster_result = clustering_engine.cluster_repository(result)
+            
+            # Handle cluster output
+            if output is None or str(output) == "-":
+                # Output index to stdout for cluster mode
+                index_json = json.dumps(
+                    cluster_result.index.model_dump(),
+                    indent=2 if output_format == "pretty" else None,
+                    ensure_ascii=False,
+                    default=str
+                )
+                console.print(index_json)
+            else:
+                # Create output directory for clusters
+                output_dir = output.parent / output.stem if output.suffix else output
+                # Handle special file paths like /dev/stdout
+                if not str(output_dir).startswith(("/dev/", "/proc/")):
+                    output_dir.mkdir(exist_ok=True)
+                
+                # Write index file
+                index_path = output_dir / "index.json"
+                index_json = json.dumps(
+                    cluster_result.index.model_dump(),
+                    indent=2 if output_format == "pretty" else None,
+                    ensure_ascii=False,
+                    default=str
+                )
+                index_path.write_text(index_json, encoding="utf-8")
+                
+                # Write cluster files
+                for cluster_id, cluster_data in cluster_result.cluster_files.items():
+                    cluster_path = output_dir / f"{cluster_id}.json"
+                    cluster_json = json.dumps(
+                        cluster_data,
+                        indent=2 if output_format == "pretty" else None,
+                        ensure_ascii=False,
+                        default=str
+                    )
+                    cluster_path.write_text(cluster_json, encoding="utf-8")
+                
+                console.print(f"[green]Cluster analysis complete![/green] Results written to {output_dir}")
+                console.print(f"📁 Generated {len(cluster_result.cluster_files)} clusters + index.json")
+            
+            # Show cluster summary
+            cluster_table = Table(title="Cluster Analysis Summary")
+            cluster_table.add_column("Metric", style="cyan")
+            cluster_table.add_column("Value", style="magenta")
+            
+            cluster_table.add_row("Files analyzed", str(cluster_result.index.total_files))
+            cluster_table.add_row("Clusters generated", str(cluster_result.index.total_clusters))
+            cluster_table.add_row("Cluster mode", cluster_mode.title())
+            cluster_table.add_row("Target size", cluster_size)
+            cluster_table.add_row("Index level", index_level.title())
+            
+            console.print(cluster_table)
+            return
+        
+        # Regular analysis mode - apply level filtering
         filtered_result = filter_result_by_level(result, level)
         
         # Format output
