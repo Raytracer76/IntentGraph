@@ -5,6 +5,85 @@ All notable changes to IntentGraph will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-01-06
+
+### 🆕 **MAJOR: AI-Native Interface Revolution** 
+
+IntentGraph v0.3.0 introduces a revolutionary **AI-native interface** that transforms how AI agents interact with codebases - enabling true autonomous coding agents without human intervention.
+
+#### ✨ **New AI-Native Features**
+
+- **🧠 Autonomous Capability Discovery** - AI agents discover capabilities without human docs via `get_capabilities_manifest()`
+- **🗣️ Natural Language Query Interface** - AI agents use natural language instead of manual commands via `agent.query("Find security issues")`
+- **🎯 Task-Aware Optimization** - Responses automatically adapt to agent context (bug fixing, security audit, feature development, etc.)
+- **💰 Token Budget Management** - Automatic response optimization for AI context limits with intelligent truncation
+- **🧭 Intelligent Navigation** - Self-guided exploration with `agent.explore()` and `agent.recommend_next_actions()`
+- **📋 Self-Describing Interface** - Manifest-driven interaction patterns without human intervention
+
+#### 🔧 **New API Components**
+
+- **`connect_to_codebase()`** - Primary entry point for AI agents to connect with context
+- **`CodebaseAgent`** - Main AI agent interface class with autonomous capabilities  
+- **`get_capabilities_manifest()`** - Self-describing capabilities discovery
+- **`SemanticQuery`** - Natural language query processing with intent recognition
+- **`TokenBudget`** - Intelligent token budget management and optimization
+- **`AutonomousNavigator`** - Self-guided codebase exploration
+
+#### 📖 **New Examples & Documentation**
+
+- **`examples/ai_native/`** - Comprehensive AI-native interface examples
+- **`autonomous_agent_demo.py`** - Full demonstration of AI-native capabilities
+- **Updated agent workflow documentation** - Complete AI-native patterns and best practices
+
+#### 🎯 **Task-Specific Agent Support**
+
+- **Bug Fixing Agents** - Complexity-focused responses with error pattern detection
+- **Feature Development Agents** - Extension point analysis with architectural guidance  
+- **Security Audit Agents** - Security pattern recognition with vulnerability detection
+- **Code Review Agents** - Quality assessment with maintainability metrics
+- **Refactoring Agents** - Dependency analysis with coupling insights
+- **Documentation Agents** - API surface extraction with architectural mapping
+
+#### 💡 **Key Benefits for AI Agents**
+
+- **No more manual commands** - Natural language queries replace command construction
+- **No more human documentation** - Self-describing capabilities via manifest
+- **No more configuration** - Automatic optimization based on agent context
+- **No more token waste** - Intelligent budget management with adaptive responses
+- **No more blind navigation** - Autonomous exploration with guided recommendations
+
+#### 🔄 **Integration Examples**
+
+```python
+# LangChain Integration
+from intentgraph import connect_to_codebase
+agent = connect_to_codebase("/path/to/repo")
+results = agent.query("Find authentication security issues")
+
+# AutoGen Integration
+class CodebaseAgent(autogen.AssistantAgent):
+    def analyze_codebase(self, query):
+        return self.codebase_agent.query(query)
+
+# Custom AI Framework Integration
+agent = connect_to_codebase("/path/to/repo", {"task": "bug_fixing"})
+exploration = agent.explore()
+recommendations = agent.recommend_next_actions(exploration)
+```
+
+### 🚀 **What Makes This Revolutionary**
+
+IntentGraph v0.3.0 transforms from **AI-friendly** to **AI-usable** - the first codebase intelligence platform designed for true autonomous AI agents. No more human mediation, documentation reading, or manual command construction.
+
+### 🔄 **Breaking Changes**
+
+- None - The AI-native interface is additive and fully backward compatible
+
+### 🐛 **Bug Fixes**
+
+- Fixed query builder enum/string handling for agent task values
+- Improved token budget tier mapping accuracy
+
 ## [0.2.2] - 2025-07-06
 
 ### Added

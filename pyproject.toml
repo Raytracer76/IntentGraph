@@ -5,14 +5,14 @@ build-backend = "hatchling.build"
 [project]
 name = "intentgraph"
 dynamic = ["version"]
-description = "AI-optimized codebase intelligence with intelligent clustering and token-limit friendly output"
+description = "AI-native codebase intelligence with autonomous agent interface, natural language queries, and intelligent clustering"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.12"
 authors = [
     {name = "IntentGraph Team", email = "security@intentgraph.dev"},
 ]
-keywords = ["dependency", "analysis", "graph", "repository", "code", "ai", "agents", "token-limit", "clustering", "navigation", "codebase-intelligence"]
+keywords = ["ai-native", "autonomous-agents", "natural-language", "codebase-intelligence", "dependency-analysis", "semantic-queries", "token-budget", "intelligent-clustering", "ai-agents", "code-analysis"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

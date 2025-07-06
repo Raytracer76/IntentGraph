@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-**Your Codebase's Genome** - Pre-digested, structured, AI-optimized intelligence that unlocks true autonomous coding agents.
+**Your Codebase's Genome** - Pre-digested, structured, AI-optimized intelligence with an **AI-native interface** that unlocks true autonomous coding agents.
 
 ## 🧠 **Built for the GPT-4+ Era**
 
@@ -45,6 +45,100 @@ Traditional approaches fail with modern codebases:
 **IntentGraph provides comprehensive intelligence upfront** - your codebase's structured genome.
 
 ## ✨ **What Makes It Special**
+
+### **🤖 Revolutionary AI-Native Interface**
+```python
+# AI agent discovers capabilities autonomously
+from intentgraph import get_capabilities_manifest
+capabilities = get_capabilities_manifest()
+
+# AI agent uses natural language queries
+agent = connect_to_codebase("/path/to/repo")
+results = agent.query("Find authentication security issues")
+
+# AI agent gets task-specific optimization
+bug_agent = connect_to_codebase("/path/to/repo", {"task": "bug_fixing"})
+security_agent = connect_to_codebase("/path/to/repo", {"task": "security_audit"})
+```
+
+**Key AI-Native Features:**
+- **🧠 Autonomous Capability Discovery** - AI agents discover what they can do without human docs
+- **🗣️ Natural Language Queries** - No more manual command construction  
+- **🎯 Task-Aware Optimization** - Responses adapt to agent context (bug fixing, security audit, etc.)
+- **💰 Token Budget Management** - Automatic response optimization for AI context limits
+- **🧭 Intelligent Navigation** - Autonomous exploration with guided recommendations
+- **📋 Self-Describing Interface** - Manifest-driven interaction without human intervention
+
+### **🔄 How AI-Native Interface Works**
+
+```
+       LLM Agent
+          │
+     connect_to_codebase()
+          │
+   ┌──────▼────────┐
+   │ .intentgraph/ │  ← Cached structured knowledge
+   └──────┬────────┘
+          │
+   auto-load clusters, optimize output, reply
+```
+
+**Flow:**
+1. **AI Agent connects** → `connect_to_codebase("/path/to/repo", {"task": "bug_fixing"})`
+2. **IntentGraph auto-generates** → `.intentgraph/` cached intelligence (if not exists)
+3. **Agent queries naturally** → `agent.query("Find authentication security issues")`
+4. **System auto-optimizes** → Loads relevant clusters, manages token budget, formats response
+5. **Agent gets structured results** → Ready-to-use findings with navigation guidance
+
+### **📋 Self-Describing Capabilities Manifest**
+
+AI agents discover everything they need through the capabilities manifest:
+
+```python
+from intentgraph import get_capabilities_manifest
+capabilities = get_capabilities_manifest()
+
+# Core capabilities available to agents
+capabilities["capabilities"]["analysis_types"] = {
+    "structural_analysis": {
+        "description": "Analyze code structure, dependencies, and architecture",
+        "typical_token_cost": 2500,
+        "best_for": ["code_understanding", "architecture_review"]
+    },
+    "semantic_analysis": {
+        "description": "Extract semantic meaning, patterns, and purposes", 
+        "typical_token_cost": 3500,
+        "best_for": ["pattern_detection", "code_review"]
+    },
+    "quality_analysis": {
+        "description": "Assess code quality, complexity, and maintainability",
+        "typical_token_cost": 2000,
+        "best_for": ["bug_fixing", "refactoring"]
+    },
+    "intelligent_clustering": {
+        "description": "Break large codebases into navigable clusters",
+        "typical_token_cost": 1500,
+        "best_for": ["large_codebase_navigation", "focused_analysis"]
+    }
+}
+
+# Task-specific optimization patterns
+capabilities["agent_interaction_patterns"]["task_based_optimization"] = {
+    "bug_fixing": {
+        "recommended_queries": ["Find high complexity files", "Analyze error handling patterns"],
+        "optimal_clustering": "analysis_mode",
+        "response_focus": "problematic_areas"
+    },
+    "security_audit": {
+        "recommended_queries": ["Find input validation patterns", "Analyze auth flows"],
+        "optimal_clustering": "feature_based", 
+        "response_focus": "security_patterns"
+    }
+    # ... more task patterns
+}
+```
+
+**Extensibility:** Users can extend the manifest by contributing new task patterns, analysis types, or agent interaction patterns through configuration files or programmatic APIs.
 
 ### **🔍 Deep Code Analysis**
 ```json
@@ -95,7 +189,24 @@ Traditional approaches fail with modern codebases:
 pip install intentgraph
 ```
 
-### **Basic Usage**
+### **🤖 AI-Native Interface (NEW!)**
+```python
+from intentgraph import connect_to_codebase
+
+# AI agent connects autonomously
+agent = connect_to_codebase("/path/to/repo", {
+    "task": "bug_fixing",
+    "token_budget": 30000,
+    "agent_type": "code_reviewer"
+})
+
+# Natural language queries
+results = agent.query("Find files with high complexity")
+insights = agent.explore("security patterns")
+recommendations = agent.recommend_next_actions()
+```
+
+### **Traditional CLI Usage**
 ```bash
 # Analyze current directory (AI-friendly minimal output ~10KB)
 intentgraph .
@@ -111,6 +222,25 @@ intentgraph . --lang py,js,ts
 ```
 
 💡 **Pro tip**: Add `.intentgraph/` to your `.gitignore` - it's generated output like `.pytest_cache/`
+
+### **🤖 AI-Native Interface Examples**
+```bash
+# Run the comprehensive AI-native demo
+python examples/ai_native/autonomous_agent_demo.py /path/to/repo
+
+# Test AI interface components
+python examples/ai_native/test_ai_interface.py
+```
+
+**Key AI-Native Capabilities:**
+- **Autonomous Discovery** - AI agents discover capabilities without human docs
+- **Natural Language Queries** - "Find authentication security issues" 
+- **Task-Aware Optimization** - Bug fixing vs security audit vs feature development
+- **Token Budget Management** - Automatic response optimization for AI context limits
+- **Intelligent Navigation** - Self-guided exploration with recommendations
+- **Manifest-Driven Interaction** - Self-describing interface patterns
+
+🚀 **[Complete AI-Native Examples →](examples/ai_native/README.md)**
 
 ### **🤖 AI-Optimized Output Levels**
 IntentGraph offers three output levels optimized for different use cases:
@@ -234,12 +364,18 @@ intentgraph . --cluster --cluster-mode analysis --cluster-size 15KB
 
 ### **🤖 AI Coding Agents**
 ```python
-# Instead of scanning files repeatedly
+# OLD WAY: Manual commands and output handling
 agent.scan_codebase()  # Slow, incomplete
-
-# Use IntentGraph intelligence
 analysis = load_intentgraph_report("analysis.json")
-agent.understand_codebase(analysis)  # Fast, comprehensive
+agent.understand_codebase(analysis)  # Manual integration
+
+# NEW WAY: AI-native interface with natural language
+agent = connect_to_codebase("/path/to/repo", {
+    "task": "bug_fixing",
+    "token_budget": 30000
+})
+results = agent.query("Find high complexity files with recent changes")
+next_steps = agent.recommend_next_actions(results)  # Autonomous
 ```
 
 ### **🔧 Developer Tools**
@@ -463,12 +599,16 @@ Direct productivity and understanding:
 - **Technical Debt Assessment** - Quantified quality metrics and improvement guidance
 - **Team Onboarding** - Rapid understanding of unfamiliar codebases
 
-🤖 **[Complete AI Agent Workflow Guide →](docs/agent_workflows.md)**
+🤖 **[Complete AI Agent Workflow Guide →](examples/ai_native/README.md)**
 
 ## 🏆 **Why Choose IntentGraph**
 
 | Feature | IntentGraph | GitHub Dependency Graph | SonarQube | Tree-sitter |
 |---------|-------------|-------------------------|-----------|-------------|
+| **AI-native interface** | ✅ (Natural language) | ❌ | ❌ | ❌ |
+| **Autonomous navigation** | ✅ (Self-guided) | ❌ | ❌ | ❌ |
+| **Task-aware optimization** | ✅ (6 agent types) | ❌ | ❌ | ❌ |
+| **Token budget management** | ✅ (Auto-optimization) | ❌ | ❌ | ❌ |
 | **Function-level deps** | ✅ | ❌ | ❌ | ❌ |
 | **Semantic analysis** | ✅ | ❌ | ❌ | ❌ |
 | **AI-optimized output** | ✅ (3 levels) | ❌ | ❌ | ❌ |
