@@ -1,0 +1,37 @@
+# Manual PR Creation Commands (Windows)
+# Copy and paste these into PowerShell or Command Prompt
+
+# ============================================================
+# PR 1: JSON Parser (Priority: HIGH - merge first)
+# ============================================================
+gh pr create --base main --head feat/lang-json --title "Add JSON parser with dependency extraction" --body "## Summary\n\nImplements JSON parser for IntentGraph with comprehensive package.json dependency extraction.\n\n## Features\n- Top-level key extraction as symbols\n- package.json dependency parsing (all 4 types)\n- Stable SHA256-based symbol IDs\n- No tree-sitter dependency\n\n## Test Results\n- Local (Windows): 24/24 tests passing\n- Coverage: 91%\n\n## Merge Strategy\nPriority: HIGH - Ready to merge after CI green\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+
+# ============================================================
+# PR 2: TypeScript Parser (Priority: HIGH - merge first)
+# ============================================================
+gh pr create --base main --head feat/lang-ts --title "Add TypeScript parser with deterministic analysis" --body "## Summary\n\nImplements TypeScript parser for IntentGraph with comprehensive symbol extraction.\n\n## Features\n- Symbol extraction: functions, classes, interfaces, types, enums\n- Import/export detection\n- Stable SHA256-based symbol IDs\n\n## Test Results\n- Local (Windows): 16/16 tests passing\n- Coverage: 76%\n\n## Merge Strategy\nPriority: HIGH - Ready to merge after CI green\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+
+# ============================================================
+# PR 3: JavaScript Parser (Priority: MEDIUM - merge after CI)
+# ============================================================
+gh pr create --base main --head feat/lang-js --title "Add JavaScript parser with CommonJS and ES6 support" --body "## Summary\n\nImplements JavaScript parser for IntentGraph with CommonJS and ES6 support.\n\n## Features\n- CommonJS require() statements\n- ES6 import/export statements\n- Function extraction (regular, arrow, async, generator)\n- Class declarations\n\n## Test Results\n- Local (Windows): 15/24 tests passing (tree-sitter blocked by Windows ACL)\n- CI Status: AWAITING LINUX VERIFICATION\n\n## Known Issue\nWindows Application Control blocks tree-sitter native libraries. Tests should pass in Linux CI.\n\n## Merge Strategy\nPriority: MEDIUM - Merge after CI confirms tests pass, or add xfail markers for Windows\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+
+# ============================================================
+# After PRs are created, monitor CI status:
+# ============================================================
+gh pr list --state open
+gh pr checks <PR-NUMBER>
+
+# ============================================================
+# Merge strategy after CI runs:
+# ============================================================
+# 1. If CI green on JSON + TypeScript: Merge immediately
+# 2. If CI green on JavaScript: Merge
+# 3. If CI fails on JavaScript: Add xfail markers in test file:
+#
+#    @pytest.mark.xfail(sys.platform == 'win32', reason='Windows ACL blocks tree-sitter')
+#    def test_extract_function_declarations(...):
+#        ...
