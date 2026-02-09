@@ -114,7 +114,18 @@ def filter_result_by_level(result: AnalysisResult, level: str) -> dict:
                 ],
                 "file_purpose": file_info.file_purpose,
             }
-        
+
+        else:
+            # Unknown level, default to minimal
+            filtered_file = {
+                "path": str(file_info.path),
+                "language": file_info.language,
+                "dependencies": [str(dep) for dep in file_info.dependencies],
+                "imports": file_info.imports,
+                "loc": file_info.loc,
+                "complexity_score": file_info.complexity_score,
+            }
+
         filtered_result["files"].append(filtered_file)
     
     return filtered_result

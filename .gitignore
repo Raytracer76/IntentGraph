@@ -208,3 +208,5 @@ test_output.json
 perf_test.json
 large_repo/
 sample_repo/
+
+CLAUDE.mdtest_analysis.json
