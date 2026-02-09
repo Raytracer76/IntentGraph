@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-**IntentGraph** is a static code analysis CLI tool optimized for AI agent context windows. It analyzes Python codebases (with basic JS/TS/Go support) and generates token-efficient structured output that fits within AI agent limitations.
+**IntentGraph** is a static code analysis CLI tool optimized for AI agent context windows. It analyzes Python, JavaScript, and TypeScript codebases (with basic Go support) and generates token-efficient structured output that fits within AI agent limitations.
 
 **Version**: 0.3.0-dev
 **Python**: 3.12+
@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Core Purpose
 
 IntentGraph solves the **context window problem** for AI coding agents by:
-- Pre-analyzing Python codebases into minimal, AI-optimized output (~10KB vs 340KB full analysis)
+- Pre-analyzing Python, JavaScript, and TypeScript codebases into minimal, AI-optimized output (~10KB vs 340KB full analysis)
 - Providing function-level dependency tracking and code metrics (complexity, maintainability)
 - Offering intelligent clustering for massive repositories that exceed token limits
 - Exposing a production-ready CLI with an AI integration framework for future expansion
@@ -21,12 +21,13 @@ IntentGraph solves the **context window problem** for AI coding agents by:
 ## What's Real vs. What's Framework
 
 **✅ Fully Working:**
-- Python code analysis with complete AST parsing
+- Python, JavaScript, and TypeScript code analysis with complete AST parsing
 - Dependency graph generation with cycle detection
 - Code complexity and maintainability metrics
 - Three-level output system (minimal, medium, full)
 - Intelligent clustering for large codebases
 - Comprehensive CLI with rich options
+- 617+ tests (Python: pytest, JavaScript: 301 tests, TypeScript: 316 tests)
 
 **🏗️ Framework/Scaffolding:**
 - AI-native interface exists with structure in place
@@ -94,8 +95,8 @@ intentgraph . --cluster --cluster-mode analysis
 # Full analysis with all metadata
 intentgraph . --level full --output analysis.json
 
-# Focus on Python only (recommended for best results)
-intentgraph /path/to/repo --lang py
+# Multi-language analysis (Python, JavaScript, TypeScript)
+intentgraph /path/to/repo --lang py,js,ts
 
 # Check for circular dependencies
 intentgraph . --show-cycles

@@ -4,13 +4,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-**Static codebase analysis optimized for AI context windows** - Transform Python codebases into structured, token-efficient intelligence that fits within AI agent token limits.
+**Static codebase analysis optimized for AI context windows** - Transform Python, JavaScript, and TypeScript codebases into structured, token-efficient intelligence that fits within AI agent token limits.
 
 ## 🎯 What IntentGraph Actually Does
 
 IntentGraph is a **static code analysis CLI tool** that:
 
-1. **Analyzes Python codebases** using AST parsing (with basic support for JS/TS/Go)
+1. **Analyzes Python, JavaScript, and TypeScript codebases** using full AST parsing (with basic support for Go)
 2. **Generates dependency graphs** with cycle detection and relationship tracking
 3. **Calculates code metrics** (complexity, maintainability, LOC)
 4. **Produces AI-optimized JSON output** in 3 levels (minimal ~10KB, medium ~70KB, full ~340KB)
@@ -19,13 +19,13 @@ IntentGraph is a **static code analysis CLI tool** that:
 ### 🎪 What's Real vs. What's Framework
 
 **✅ Fully Working:**
-- Python code analysis with detailed AST parsing
+- Python, JavaScript, and TypeScript code analysis with full AST parsing
 - Dependency graph generation with cycle detection
 - Code complexity and maintainability metrics
 - Three-level output system optimized for AI token limits
 - Intelligent clustering for large codebases
 - CLI with comprehensive options
-- Clean Architecture with good test coverage
+- Clean Architecture with good test coverage (617+ tests)
 
 **🏗️ Framework/Scaffolding (Partial Implementation):**
 - AI-native interface exists but query execution returns template data
@@ -33,11 +33,11 @@ IntentGraph is a **static code analysis CLI tool** that:
 - Agent context and response optimization structure is in place
 - Task-aware optimization templates exist but need real implementation
 
-**Bottom Line:** IntentGraph is a production-ready Python analysis tool with an AI-friendly output format, plus a well-architected framework for future AI-native capabilities.
+**Bottom Line:** IntentGraph is a production-ready multi-language analysis tool (Python, JavaScript, TypeScript) with an AI-friendly output format, plus a well-architected framework for future AI-native capabilities.
 
 ## ⚡ The Problem IntentGraph Solves
 
-**AI coding agents hit context limits.** A typical Python project can generate 1-2MB of raw analysis data. AI agents have ~200KB context windows.
+**AI coding agents hit context limits.** A typical codebase can generate 1-2MB of raw analysis data. AI agents have ~200KB context windows.
 
 **Solution:** IntentGraph pre-analyzes code and generates minimal, structured output that fits any AI context:
 - **Minimal mode:** ~10KB per repository (paths, dependencies, basic metrics)
@@ -64,8 +64,8 @@ intentgraph . --cluster
 # Full analysis with all metadata
 intentgraph . --level full --output analysis.json
 
-# Focus on Python only
-intentgraph /path/to/repo --lang py
+# Multi-language analysis
+intentgraph /path/to/repo --lang py,js,ts
 ```
 
 ### Output Example
@@ -92,12 +92,28 @@ intentgraph /path/to/repo --lang py
 
 ## 🔍 Core Features
 
-### 1. Deep Python Analysis
-- **AST parsing** for accurate symbol extraction
-- **Cyclomatic complexity** calculation
-- **Maintainability index** scoring
-- **Function-level dependencies** tracking
-- **Public API detection** (exports, `__all__`, underscore conventions)
+### 1. Deep Multi-Language Analysis
+
+**Python:**
+- Full AST parsing for accurate symbol extraction
+- Cyclomatic complexity calculation
+- Maintainability index scoring
+- Function-level dependencies tracking
+- Public API detection (exports, `__all__`, underscore conventions)
+
+**JavaScript:**
+- Full AST parsing with tree-sitter
+- ES6+ support (arrow functions, classes, template literals)
+- CommonJS and ES module analysis
+- Cyclomatic complexity calculation
+- Import/export tracking
+
+**TypeScript:**
+- Full AST parsing with TypeScript-specific features
+- Interface and type alias extraction
+- Generic type parameter handling
+- Decorator support
+- Import/export analysis (including type imports)
 
 ### 2. Dependency Graph Generation
 - **File-level dependencies** with import tracking
@@ -207,12 +223,12 @@ print(results["confidence"])  # Confidence level
 
 | Language   | Status | Features |
 |------------|--------|----------|
-| **Python** | ✅ Full | AST parsing, complexity, symbols, dependencies |
-| JavaScript | 🟡 Basic | File-level dependencies only |
-| TypeScript | 🟡 Basic | File-level dependencies only |
+| **Python** | ✅ Full | Complete AST parsing, complexity metrics, symbols, dependencies |
+| **JavaScript** | ✅ Full | Full AST parsing, ES6+, complexity, imports/exports |
+| **TypeScript** | ✅ Full | Full AST with TS features, interfaces, generics, decorators |
 | Go | 🟡 Basic | File-level dependencies only |
 
-**Enhanced analysis coming for:** JavaScript, TypeScript, Go, Rust, Java
+**Enhanced analysis coming for:** Go, Rust, Java, C#
 
 ## ⚙️ Command Line Options
 
