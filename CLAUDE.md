@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-**IntentGraph** is an AI-native codebase intelligence platform that provides pre-digested, structured analysis of codebases optimized for AI agents and autonomous coding tools. It transforms codebases into "genomes" - structured intelligence that AI agents can consume directly.
+**IntentGraph** is a static code analysis CLI tool optimized for AI agent context windows. It analyzes Python codebases (with basic JS/TS/Go support) and generates token-efficient structured output that fits within AI agent limitations.
 
 **Version**: 0.3.0-dev
 **Python**: 3.12+
@@ -13,10 +13,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Core Purpose
 
 IntentGraph solves the **context window problem** for AI coding agents by:
-- Pre-analyzing codebases into minimal, AI-optimized output (~10KB vs 340KB full analysis)
-- Providing function-level dependency tracking and semantic analysis
+- Pre-analyzing Python codebases into minimal, AI-optimized output (~10KB vs 340KB full analysis)
+- Providing function-level dependency tracking and code metrics (complexity, maintainability)
 - Offering intelligent clustering for massive repositories that exceed token limits
-- Exposing both traditional CLI and revolutionary AI-native natural language interfaces
+- Exposing a production-ready CLI with an AI integration framework for future expansion
+
+## What's Real vs. What's Framework
+
+**✅ Fully Working:**
+- Python code analysis with complete AST parsing
+- Dependency graph generation with cycle detection
+- Code complexity and maintainability metrics
+- Three-level output system (minimal, medium, full)
+- Intelligent clustering for large codebases
+- Comprehensive CLI with rich options
+
+**🏗️ Framework/Scaffolding:**
+- AI-native interface exists with structure in place
+- Natural language query parsing works
+- Semantic query execution uses basic file filtering (not deep AI understanding)
+- Response optimization returns template data
+- Task-aware optimization structure exists but needs full implementation
 
 ## Quick Commands
 
@@ -66,7 +83,7 @@ bandit -r src/
 ruff format . && ruff check --fix . && mypy . && bandit -r src/
 ```
 
-### CLI Usage
+### CLI Usage (Primary Interface)
 ```bash
 # Analyze current directory (minimal output, AI-friendly)
 intentgraph .
@@ -77,23 +94,25 @@ intentgraph . --cluster --cluster-mode analysis
 # Full analysis with all metadata
 intentgraph . --level full --output analysis.json
 
-# Focus on specific languages
-intentgraph /path/to/repo --lang py,ts
+# Focus on Python only (recommended for best results)
+intentgraph /path/to/repo --lang py
 
 # Check for circular dependencies
 intentgraph . --show-cycles
 ```
 
-### Running Examples
+### Programmatic Usage
 ```bash
-# AI-native interface demo (autonomous agent simulation)
-python examples/ai_native/autonomous_agent_demo.py /path/to/repo
+# Traditional Python API (production-ready)
+from intentgraph import RepositoryAnalyzer
+analyzer = RepositoryAnalyzer(workers=4, include_tests=False)
+result = analyzer.analyze(Path("/path/to/repo"))
 
-# Output levels comparison
-python examples/ai_agent_integration/output_levels_demo.py
-
-# Clustering modes comparison
-python examples/clustering/cluster_mode_comparison.py /path/to/large-repo
+# AI Integration Framework (experimental)
+from intentgraph import connect_to_codebase
+agent = connect_to_codebase("/path/to/repo", {"task": "bug_fixing"})
+results = agent.query("Find high complexity files")
+# Note: Query execution uses file-based filtering, not deep semantic analysis
 ```
 
 ## Architecture Overview
@@ -138,21 +157,27 @@ IntentGraph follows **Clean Architecture** principles with strict layer separati
 - `file_repository.py`: File system abstraction
 - `output.py`: JSON serialization with orjson
 
-### AI-Native Interface (`src/intentgraph/ai/`)
+### AI Integration Framework (`src/intentgraph/ai/`)
 
-Revolutionary interface designed for autonomous AI agents:
-- `agent.py`: `CodebaseAgent` class for natural language queries
-- `manifest.py`: Self-describing capabilities manifest
-- `query.py`: Natural language query processing
-- `navigation.py`: Intelligent navigation and recommendations
-- `response.py`: Task-aware, token-optimized responses
+Framework for AI-native interaction (partial implementation):
+- `agent.py`: `CodebaseAgent` class with agent context management
+- `manifest.py`: Static capabilities manifest
+- `query.py`: Natural language query parsing (intent detection)
+- `navigation.py`: Navigation strategies with file filtering
+- `response.py`: Response template system
 
-**Key AI Features**:
-- **Autonomous Capability Discovery**: `get_capabilities_manifest()` - AI agents discover what they can do
-- **Natural Language Queries**: `agent.query("Find security vulnerabilities")` - no command construction
-- **Task-Aware Optimization**: Responses adapt to agent context (bug_fixing, security_audit, etc.)
-- **Token Budget Management**: Automatic optimization for AI context limits
-- **Intelligent Navigation**: Self-guided exploration with recommendations
+**Current Implementation:**
+- ✅ **Query Parsing**: Natural language intent detection works
+- ✅ **Agent Context**: Task-based context management implemented
+- ✅ **Token Budget**: Budget tracking and tier management
+- ✅ **Response Templates**: Structured response formatting
+- 🏗️ **Semantic Execution**: Uses file-based filtering, not deep AI understanding
+- 🏗️ **Autonomous Navigation**: Strategy selection works, execution is basic
+
+**For Production Use:**
+- Use the **CLI** (`intentgraph` command) for reliable analysis
+- Use `RepositoryAnalyzer` class for programmatic access
+- AI framework provides structure for future enhancements
 
 ## Key Design Patterns
 
