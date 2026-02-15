@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.intentgraph.adapters.parsers.typescript_parser import TypeScriptParser
+from intentgraph.adapters.parsers.typescript_parser import TypeScriptParser
 
 
 class TestTypeScriptParser:

@@ -7,11 +7,11 @@ from unittest.mock import patch
 
 import pytest
 
-from src.intentgraph.adapters.parsers.enhanced_python_parser import (
+from intentgraph.adapters.parsers.enhanced_python_parser import (
     EnhancedPythonParser, 
     ASTDataCollector
 )
-from src.intentgraph.domain.models import CodeSymbol
+from intentgraph.domain.models import CodeSymbol
 
 
 class TestEnhancedPythonParser:

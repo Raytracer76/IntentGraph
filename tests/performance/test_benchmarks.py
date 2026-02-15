@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from src.intentgraph.application.analyzer import RepositoryAnalyzer
-from src.intentgraph.application.streaming_analyzer import StreamingAnalyzer, IncrementalAnalyzer
+from intentgraph.application.analyzer import RepositoryAnalyzer
+from intentgraph.application.streaming_analyzer import StreamingAnalyzer, IncrementalAnalyzer
 
 
 class TestPerformanceBenchmarks:

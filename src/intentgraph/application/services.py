@@ -95,15 +95,15 @@ class CodeAnalysisService:
             if basic_info.language == Language.PYTHON:
                 from ..adapters.parsers.enhanced_python_parser import EnhancedPythonParser
                 parser = EnhancedPythonParser()
-                
+
                 symbols, exports, func_deps, imports, metadata = parser.extract_code_structure(
                     file_path, repo_path
                 )
-                
+
                 file_purpose = self._infer_file_purpose(basic_info.path, symbols)
                 key_abstractions = self._extract_key_abstractions(symbols)
                 design_patterns = self._detect_design_patterns(symbols, exports)
-                
+
                 return FileInfo(
                     path=basic_info.path,
                     language=basic_info.language,
@@ -120,6 +120,39 @@ class CodeAnalysisService:
                     file_purpose=file_purpose,
                     key_abstractions=key_abstractions,
                     design_patterns=design_patterns
+                )
+            elif basic_info.language in (Language.TYPESCRIPT, Language.JAVASCRIPT):
+                from ..adapters.parsers.typescript_parser import TypeScriptParser
+                from ..adapters.parsers.javascript_parser import JavaScriptParser
+
+                # Select appropriate parser
+                if basic_info.language == Language.TYPESCRIPT:
+                    parser = TypeScriptParser()
+                else:
+                    parser = JavaScriptParser()
+
+                symbols, exports, func_deps, imports, metadata = parser.extract_code_structure(
+                    file_path, repo_path
+                )
+
+                file_purpose = self._infer_file_purpose(basic_info.path, symbols)
+
+                return FileInfo(
+                    path=basic_info.path,
+                    language=basic_info.language,
+                    sha256=basic_info.sha256,
+                    loc=basic_info.loc,
+                    id=basic_info.id,
+                    dependencies=basic_info.dependencies,
+                    symbols=symbols,
+                    exports=exports,
+                    function_dependencies=func_deps,
+                    imports=imports,
+                    complexity_score=metadata.get("total_functions", 0) + metadata.get("total_classes", 0),
+                    maintainability_index=0.0,  # Not calculated for TS/JS yet
+                    file_purpose=file_purpose,
+                    key_abstractions=[],  # Not extracted for TS/JS yet
+                    design_patterns=[]  # Not detected for TS/JS yet
                 )
             else:
                 return basic_info

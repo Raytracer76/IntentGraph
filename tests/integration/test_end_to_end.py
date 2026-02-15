@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from src.intentgraph.application.analyzer import RepositoryAnalyzer
-from src.intentgraph.domain.models import Language
+from intentgraph.application.analyzer import RepositoryAnalyzer
+from intentgraph.domain.models import Language
 
 
 class TestEndToEndWorkflows:

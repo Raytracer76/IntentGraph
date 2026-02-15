@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from hypothesis import given, strategies as st, assume
 
-from src.intentgraph.adapters.parsers.enhanced_python_parser import EnhancedPythonParser
+from intentgraph.adapters.parsers.enhanced_python_parser import EnhancedPythonParser
 
 
 class TestPropertyBasedParsers:

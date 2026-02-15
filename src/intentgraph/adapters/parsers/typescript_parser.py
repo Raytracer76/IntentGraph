@@ -9,6 +9,11 @@ from uuid import UUID, uuid4
 from .base import LanguageParser
 from ...domain.models import CodeSymbol, APIExport, FunctionDependency
 
+try:
+    from tree_sitter import QueryCursor
+except ImportError:
+    QueryCursor = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,7 +56,8 @@ class TypeScriptParser(LanguageParser):
             tree = self._parser.parse(content)
 
             # Query for import statements
-            query = self._language.query("""
+            from tree_sitter import Query
+            query = Query(self._language, """
                 (import_statement source: (string) @import)
                 (call_expression
                     function: (identifier) @func
@@ -61,7 +67,15 @@ class TypeScriptParser(LanguageParser):
                     source: (string) @dynamic_import)
             """)
 
-            captures = query.captures(tree.root_node)
+            # Use QueryCursor for new tree-sitter API (0.25.x+)
+            cursor = QueryCursor(query)
+            captures_dict = cursor.captures(tree.root_node)
+
+            # Convert dict format to old (node, name) tuple format for compatibility
+            captures = []
+            for capture_name, nodes in captures_dict.items():
+                for node in nodes:
+                    captures.append((node, capture_name))
 
             for node, capture_name in captures:
                 if capture_name in ['import', 'require', 'dynamic_import']:

@@ -6,8 +6,8 @@ from uuid import UUID
 
 import pytest
 
-from src.intentgraph.adapters.parsers.javascript_parser import JavaScriptParser
-from src.intentgraph.domain.models import CodeSymbol, APIExport
+from intentgraph.adapters.parsers.javascript_parser import JavaScriptParser
+from intentgraph.domain.models import CodeSymbol, APIExport
 
 
 @pytest.fixture

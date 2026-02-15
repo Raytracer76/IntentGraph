@@ -11,6 +11,12 @@ from tree_sitter_language_pack import get_language, get_parser
 from .base import LanguageParser
 from ...domain.models import CodeSymbol, APIExport, FunctionDependency
 
+try:
+    from tree_sitter import QueryCursor, Query
+except ImportError:
+    QueryCursor = None
+    Query = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,7 +51,7 @@ class JavaScriptParser(LanguageParser):
             tree = parser.parse(content)
 
             # Query for import statements
-            query = language.query("""
+            query = Query(language, """
                 (import_statement source: (string) @import)
                 (call_expression
                     function: (identifier) @func
@@ -53,7 +59,15 @@ class JavaScriptParser(LanguageParser):
                     (#eq? @func "require"))
             """)
 
-            captures = query.captures(tree.root_node)
+            # Use QueryCursor for new tree-sitter API (0.25.x+)
+            cursor = QueryCursor(query)
+            captures_dict = cursor.captures(tree.root_node)
+
+            # Convert dict format to old (node, name) tuple format for compatibility
+            captures = []
+            for capture_name, nodes in captures_dict.items():
+                for node in nodes:
+                    captures.append((node, capture_name))
 
             for node, capture_name in captures:
                 if capture_name in ['import', 'require']:
@@ -124,7 +138,7 @@ class JavaScriptParser(LanguageParser):
         language = self._get_language()
 
         # Query for ES6 imports and CommonJS requires
-        query = language.query("""
+        query = Query(language, """
             (import_statement source: (string) @import_source)
             (call_expression
                 function: (identifier) @func
@@ -132,7 +146,15 @@ class JavaScriptParser(LanguageParser):
                 (#eq? @func "require"))
         """)
 
-        captures = query.captures(root_node)
+        # Use QueryCursor for new tree-sitter API (0.25.x+)
+        cursor = QueryCursor(query)
+        captures_dict = cursor.captures(root_node)
+
+        # Convert dict format to old (node, name) tuple format for compatibility
+        captures = []
+        for capture_name, nodes in captures_dict.items():
+            for node in nodes:
+                captures.append((node, capture_name))
 
         for node, capture_name in captures:
             if capture_name in ['import_source', 'require_source']:
@@ -151,7 +173,7 @@ class JavaScriptParser(LanguageParser):
         language = self._get_language()
 
         # Query for functions and classes
-        query = language.query("""
+        query = Query(language, """
             (function_declaration name: (identifier) @func_name) @function
             (arrow_function) @arrow
             (class_declaration name: (identifier) @class_name) @class
@@ -161,7 +183,15 @@ class JavaScriptParser(LanguageParser):
                 value: [(function_expression) (arrow_function)] @var_func)
         """)
 
-        captures = query.captures(root_node)
+        # Use QueryCursor for new tree-sitter API (0.25.x+)
+        cursor = QueryCursor(query)
+        captures_dict = cursor.captures(root_node)
+
+        # Convert dict format to old (node, name) tuple format for compatibility
+        captures = []
+        for capture_name, nodes in captures_dict.items():
+            for node in nodes:
+                captures.append((node, capture_name))
 
         # Group captures by type
         i = 0
@@ -272,7 +302,7 @@ class JavaScriptParser(LanguageParser):
         language = self._get_language()
 
         # Query for various export patterns
-        query = language.query("""
+        query = Query(language, """
             (export_statement) @export
             (export_clause (export_specifier name: (identifier) @export_name))
             (assignment_expression
@@ -283,7 +313,15 @@ class JavaScriptParser(LanguageParser):
                 (#eq? @exports_prop "exports"))
         """)
 
-        captures = query.captures(root_node)
+        # Use QueryCursor for new tree-sitter API (0.25.x+)
+        cursor = QueryCursor(query)
+        captures_dict = cursor.captures(root_node)
+
+        # Convert dict format to old (node, name) tuple format for compatibility
+        captures = []
+        for capture_name, nodes in captures_dict.items():
+            for node in nodes:
+                captures.append((node, capture_name))
 
         # Create a symbol name to ID mapping
         symbol_map = {s.name: s.id for s in symbols}
@@ -309,7 +347,7 @@ class JavaScriptParser(LanguageParser):
 
         # Count control flow nodes for complexity
         language = self._get_language()
-        complexity_query = language.query("""
+        complexity_query = Query(language, """
             (if_statement) @if
             (while_statement) @while
             (for_statement) @for
@@ -318,7 +356,15 @@ class JavaScriptParser(LanguageParser):
             (binary_expression operator: ["&&" "||"]) @logical
         """)
 
-        captures = complexity_query.captures(root_node)
+        # Use QueryCursor for new tree-sitter API (0.25.x+)
+        cursor = QueryCursor(complexity_query)
+        captures_dict = cursor.captures(root_node)
+
+        # Convert dict format to old (node, name) tuple format for compatibility
+        captures = []
+        for capture_name, nodes in captures_dict.items():
+            for node in nodes:
+                captures.append((node, capture_name))
         complexity = len(captures) + 1  # Base complexity of 1
 
         metadata['complexity_score'] = complexity
