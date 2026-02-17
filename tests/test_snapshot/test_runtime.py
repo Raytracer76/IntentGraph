@@ -35,14 +35,14 @@ class TestRuntimeDetection:
         snapshot = builder.build()
 
         # Should detect pnpm
-        assert (
-            snapshot.runtime.package_manager == PackageManager.PNPM
-        ), f"Expected pnpm, got {snapshot.runtime.package_manager}"
+        assert snapshot.runtime.package_manager == PackageManager.PNPM, (
+            f"Expected pnpm, got {snapshot.runtime.package_manager}"
+        )
 
         # Should detect pnpm workspace
-        assert (
-            snapshot.runtime.workspace_type == WorkspaceType.PNPM_WORKSPACE
-        ), f"Expected pnpm-workspace, got {snapshot.runtime.workspace_type}"
+        assert snapshot.runtime.workspace_type == WorkspaceType.PNPM_WORKSPACE, (
+            f"Expected pnpm-workspace, got {snapshot.runtime.workspace_type}"
+        )
 
         # Should extract scripts
         assert len(snapshot.runtime.scripts) > 0, "No scripts extracted"
@@ -63,17 +63,15 @@ class TestRuntimeDetection:
         snapshot = builder.build()
 
         # Should detect TypeScript
-        assert (
-            snapshot.runtime.tooling.typescript is not None
-        ), "TypeScript config not detected"
-        assert (
-            "tsconfig.json" in snapshot.runtime.tooling.typescript
-        ), "tsconfig.json not in path"
+        assert snapshot.runtime.tooling.typescript is not None, (
+            "TypeScript config not detected"
+        )
+        assert "tsconfig.json" in snapshot.runtime.tooling.typescript, (
+            "tsconfig.json not in path"
+        )
 
         # Should detect Vitest
-        assert (
-            snapshot.runtime.tooling.vitest is not None
-        ), "Vitest config not detected"
+        assert snapshot.runtime.tooling.vitest is not None, "Vitest config not detected"
 
     def test_python_poetry_detection(self, python_poetry_repo: Path) -> None:
         """Python poetry project should be detected correctly."""
@@ -81,14 +79,14 @@ class TestRuntimeDetection:
         snapshot = builder.build()
 
         # Should detect poetry
-        assert (
-            snapshot.runtime.package_manager == PackageManager.POETRY
-        ), f"Expected poetry, got {snapshot.runtime.package_manager}"
+        assert snapshot.runtime.package_manager == PackageManager.POETRY, (
+            f"Expected poetry, got {snapshot.runtime.package_manager}"
+        )
 
         # Should detect Python version
-        assert (
-            snapshot.runtime.python_version is not None
-        ), "Python version not detected"
+        assert snapshot.runtime.python_version is not None, (
+            "Python version not detected"
+        )
         assert "3.11" in snapshot.runtime.python_version, "Unexpected Python version"
 
     def test_python_tooling_detection(self, python_poetry_repo: Path) -> None:
@@ -97,12 +95,10 @@ class TestRuntimeDetection:
         snapshot = builder.build()
 
         # Should detect pytest config
-        assert (
-            snapshot.runtime.tooling.pytest is not None
-        ), "pytest config not detected"
-        assert (
-            "pyproject.toml" in snapshot.runtime.tooling.pytest
-        ), "pytest not in pyproject.toml"
+        assert snapshot.runtime.tooling.pytest is not None, "pytest config not detected"
+        assert "pyproject.toml" in snapshot.runtime.tooling.pytest, (
+            "pytest not in pyproject.toml"
+        )
 
         # Should detect ruff config
         assert snapshot.runtime.tooling.ruff is not None, "ruff config not detected"
@@ -116,28 +112,26 @@ class TestRuntimeDetection:
         snapshot = builder.build()
 
         # Should detect Node version from .nvmrc
-        assert (
-            snapshot.runtime.node_version is not None
-        ), "Node version not detected from .nvmrc"
-        assert (
-            "18.20.0" in snapshot.runtime.node_version
-        ), "Unexpected Node version from .nvmrc"
+        assert snapshot.runtime.node_version is not None, (
+            "Node version not detected from .nvmrc"
+        )
+        assert "18.20.0" in snapshot.runtime.node_version, (
+            "Unexpected Node version from .nvmrc"
+        )
 
         # Should detect ESLint
-        assert (
-            snapshot.runtime.tooling.eslint is not None
-        ), "ESLint config not detected"
-        assert (
-            ".eslintrc.json" in snapshot.runtime.tooling.eslint
-        ), "eslintrc.json not detected"
+        assert snapshot.runtime.tooling.eslint is not None, "ESLint config not detected"
+        assert ".eslintrc.json" in snapshot.runtime.tooling.eslint, (
+            "eslintrc.json not detected"
+        )
 
         # Should detect Prettier
-        assert (
-            snapshot.runtime.tooling.prettier is not None
-        ), "Prettier config not detected"
+        assert snapshot.runtime.tooling.prettier is not None, (
+            "Prettier config not detected"
+        )
 
         # Should detect Jest
         assert snapshot.runtime.tooling.jest is not None, "Jest config not detected"
-        assert (
-            "jest.config.js" in snapshot.runtime.tooling.jest
-        ), "jest.config.js not detected"
+        assert "jest.config.js" in snapshot.runtime.tooling.jest, (
+            "jest.config.js not detected"
+        )

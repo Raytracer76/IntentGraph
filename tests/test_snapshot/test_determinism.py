@@ -47,9 +47,9 @@ class TestDeterminism:
         assert uuids1 == uuids2, "File UUIDs differ across generations"
 
         # Verify UUID → path mapping is identical
-        assert (
-            snapshot1.structure.file_index == snapshot2.structure.file_index
-        ), "UUID → path mapping differs"
+        assert snapshot1.structure.file_index == snapshot2.structure.file_index, (
+            "UUID → path mapping differs"
+        )
 
     def test_ordering_stability(self, python_poetry_repo: Path) -> None:
         """Arrays should maintain stable ordering."""
@@ -67,21 +67,21 @@ class TestDeterminism:
 
         # File index should be sorted by UUID
         file_index_keys = list(snapshot.structure.file_index.keys())
-        assert file_index_keys == sorted(
-            file_index_keys
-        ), "File index not sorted by UUID"
+        assert file_index_keys == sorted(file_index_keys), (
+            "File index not sorted by UUID"
+        )
 
         # Dependencies within each file should be sorted
         for file_entry in snapshot.structure.files:
-            assert file_entry.dependencies == sorted(
-                file_entry.dependencies
-            ), f"Dependencies not sorted for {file_entry.path}"
+            assert file_entry.dependencies == sorted(file_entry.dependencies), (
+                f"Dependencies not sorted for {file_entry.path}"
+            )
 
         # Imports within each file should be sorted
         for file_entry in snapshot.structure.files:
-            assert file_entry.imports == sorted(
-                file_entry.imports
-            ), f"Imports not sorted for {file_entry.path}"
+            assert file_entry.imports == sorted(file_entry.imports), (
+                f"Imports not sorted for {file_entry.path}"
+            )
 
     def test_cross_platform_uuid_consistency(self, structure_only_repo: Path) -> None:
         """UUIDs should use POSIX-style paths regardless of platform.
@@ -101,9 +101,9 @@ class TestDeterminism:
         builder = RepoSnapshotBuilder(structure_only_repo)
         snapshot = builder.build()
 
-        assert (
-            snapshot.schema_version == "1.0.0"
-        ), f"Expected schema_version 1.0.0, got {snapshot.schema_version}"
+        assert snapshot.schema_version == "1.0.0", (
+            f"Expected schema_version 1.0.0, got {snapshot.schema_version}"
+        )
 
     @pytest.mark.parametrize(
         "fixture_name",
@@ -133,6 +133,6 @@ class TestDeterminism:
         ]
 
         # All should be identical
-        assert (
-            len(set(json_outputs)) == 1
-        ), f"Non-deterministic output for {fixture_name}"
+        assert len(set(json_outputs)) == 1, (
+            f"Non-deterministic output for {fixture_name}"
+        )

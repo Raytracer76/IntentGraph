@@ -62,9 +62,7 @@ class TestStructureSnapshot:
 
         # Imports should be present and sorted
         assert len(utils_file.imports) > 0, "No imports found"
-        assert utils_file.imports == sorted(
-            utils_file.imports
-        ), "Imports not sorted"
+        assert utils_file.imports == sorted(utils_file.imports), "Imports not sorted"
 
     def test_file_index_bidirectional(self, structure_only_repo: Path) -> None:
         """File index should provide UUID ↔ path mapping."""
@@ -79,9 +77,9 @@ class TestStructureSnapshot:
                 for uuid, path in snapshot.structure.file_index.items()
                 if path == file_entry.path
             ]
-            assert (
-                len(matching_uuids) == 1
-            ), f"File {file_entry.path} has {len(matching_uuids)} UUID mappings"
+            assert len(matching_uuids) == 1, (
+                f"File {file_entry.path} has {len(matching_uuids)} UUID mappings"
+            )
 
     def test_multi_language_detection(self, node_pnpm_repo: Path) -> None:
         """Should detect multiple languages correctly."""
@@ -101,8 +99,6 @@ class TestStructureSnapshot:
         builder = RepoSnapshotBuilder(structure_only_repo)
         snapshot = builder.build()
 
-        assert (
-            snapshot.structure.root_path
-        ), "Root path not recorded"
+        assert snapshot.structure.root_path, "Root path not recorded"
         # Should use POSIX-style path
         assert "\\" not in snapshot.structure.root_path, "Backslash in root path"

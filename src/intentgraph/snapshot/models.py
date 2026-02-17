@@ -48,9 +48,7 @@ class ToolingInfo(BaseModel):
     vitest: str | None = Field(
         default=None, description="Path to vitest config if present"
     )
-    jest: str | None = Field(
-        default=None, description="Path to jest config if present"
-    )
+    jest: str | None = Field(default=None, description="Path to jest config if present")
     eslint: str | None = Field(
         default=None, description="Path to eslint config if present"
     )
@@ -60,12 +58,8 @@ class ToolingInfo(BaseModel):
     pytest: str | None = Field(
         default=None, description="Path to pytest config if present"
     )
-    ruff: str | None = Field(
-        default=None, description="Path to ruff config if present"
-    )
-    mypy: str | None = Field(
-        default=None, description="Path to mypy config if present"
-    )
+    ruff: str | None = Field(default=None, description="Path to ruff config if present")
+    mypy: str | None = Field(default=None, description="Path to mypy config if present")
 
     class Config:
         """Pydantic config."""

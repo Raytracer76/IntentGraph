@@ -1,12 +1,57 @@
 """Shared fixtures and helpers for snapshot tests."""
 
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
 import pytest
 
 from intentgraph.snapshot import RepoSnapshotBuilder
+
+
+def _ensure_git_repo(repo_path: Path) -> None:
+    """Ensure directory is initialized as a git repository.
+
+    Args:
+        repo_path: Path to potential repository
+    """
+    if not (repo_path / ".git").exists():
+        # Initialize git repo
+        subprocess.run(
+            ["git", "init"],
+            cwd=repo_path,
+            capture_output=True,
+            check=True,
+        )
+        # Add all files
+        subprocess.run(
+            ["git", "add", "."],
+            cwd=repo_path,
+            capture_output=True,
+            check=True,
+        )
+        # Create initial commit
+        subprocess.run(
+            ["git", "commit", "-m", "test fixture", "--no-gpg-sign"],
+            cwd=repo_path,
+            capture_output=True,
+            check=True,
+        )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_fixture_repos() -> None:
+    """Automatically initialize all fixture directories as git repos.
+
+    This runs once per test session before any tests execute.
+    """
+    fixtures_dir = Path(__file__).parent / "fixtures"
+
+    # Initialize each fixture directory as a git repo
+    for fixture_dir in fixtures_dir.iterdir():
+        if fixture_dir.is_dir() and fixture_dir.name != "expected":
+            _ensure_git_repo(fixture_dir)
 
 
 @pytest.fixture

@@ -1,12 +1,37 @@
 """Tests for edge cases and error handling."""
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from intentgraph.snapshot import RepoSnapshotBuilder
 from intentgraph.snapshot.models import PackageManager
+
+
+def _init_git_repo(repo_path: Path) -> None:
+    """Initialize a directory as a git repository.
+
+    Args:
+        repo_path: Path to initialize
+    """
+    subprocess.run(["git", "init"], cwd=repo_path, capture_output=True, check=True)
+    subprocess.run(["git", "add", "."], cwd=repo_path, capture_output=True, check=True)
+
+    # Only commit if there are changes to commit
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--quiet"],
+        cwd=repo_path,
+        capture_output=True,
+    )
+    if result.returncode != 0:  # Changes exist
+        subprocess.run(
+            ["git", "commit", "-m", "test", "--no-gpg-sign"],
+            cwd=repo_path,
+            capture_output=True,
+            check=True,
+        )
 
 
 class TestEdgeCases:
@@ -40,6 +65,7 @@ class TestEdgeCases:
         """Empty directory should produce valid snapshot with no files."""
         empty_repo = tmp_path / "empty"
         empty_repo.mkdir()
+        _init_git_repo(empty_repo)
 
         builder = RepoSnapshotBuilder(empty_repo)
         snapshot = builder.build()
@@ -67,13 +93,15 @@ class TestEdgeCases:
         # Create a simple JS file
         (repo / "index.js").write_text("console.log('hello');")
 
+        _init_git_repo(repo)
+
         builder = RepoSnapshotBuilder(repo)
         snapshot = builder.build()
 
         # Should detect Node version from .nvmrc
-        assert (
-            snapshot.runtime.node_version is not None
-        ), "Node version not detected from .nvmrc alone"
+        assert snapshot.runtime.node_version is not None, (
+            "Node version not detected from .nvmrc alone"
+        )
         assert "20.10.0" in snapshot.runtime.node_version
 
     def test_json_serialization_valid(self, structure_only_repo: Path) -> None:
@@ -103,6 +131,8 @@ class TestEdgeCases:
         (repo / "package.json").write_text('{"name": "test", "version": "1.0.0"}')
         (repo / "index.js").write_text("module.exports = {};")
 
+        _init_git_repo(repo)
+
         builder = RepoSnapshotBuilder(repo)
         snapshot = builder.build()
 
@@ -121,6 +151,8 @@ class TestEdgeCases:
         (repo / "mypy.ini").write_text("[mypy]\nstrict = true\n")
         (repo / "pyproject.toml").write_text("[tool.mypy]\nstrict = false\n")
         (repo / "main.py").write_text("def main(): pass")
+
+        _init_git_repo(repo)
 
         builder = RepoSnapshotBuilder(repo)
         snapshot = builder.build()
@@ -144,6 +176,8 @@ class TestEdgeCases:
 
         # Create file with unicode name
         (repo / "файл.py").write_text("# Unicode filename\ndef test(): pass")
+
+        _init_git_repo(repo)
 
         builder = RepoSnapshotBuilder(repo)
         snapshot = builder.build()

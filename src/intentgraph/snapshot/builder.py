@@ -22,7 +22,7 @@ from .runtime import RuntimeDetector
 
 
 def _generate_deterministic_uuid(file_path: str, repo_root: str) -> UUID:
-    """Generate deterministic UUID from file path.
+    r"""Generate deterministic UUID from file path.
 
     Uses SHA256 hash of canonical file path to generate stable UUID
     that is consistent across platforms.
@@ -80,7 +80,9 @@ class RepoSnapshotBuilder:
         """
         # Run analysis if not provided
         if analysis_result is None:
-            analyzer = RepositoryAnalyzer()
+            # NOTE: include_tests=True because snapshot analysis needs ALL files,
+            # including fixture files in test directories
+            analyzer = RepositoryAnalyzer(include_tests=True)
             analysis_result = analyzer.analyze(self.repo_root)
 
         # Build structure snapshot from analysis
