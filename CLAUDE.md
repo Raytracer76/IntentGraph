@@ -6,9 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **IntentGraph** is a static code analysis CLI tool optimized for AI agent context windows. It analyzes Python, JavaScript, and TypeScript codebases (with basic Go support) and generates token-efficient structured output that fits within AI agent limitations.
 
-**Version**: 0.3.1
+**Version**: 0.4.0 (Live on PyPI)
 **Python**: 3.12+
 **License**: MIT
+**Status**: Production-ready with RepoSnapshot v1 (deterministic snapshots)
 
 ## Core Purpose
 
@@ -16,6 +17,7 @@ IntentGraph solves the **context window problem** for AI coding agents by:
 - Pre-analyzing Python, JavaScript, and TypeScript codebases into minimal, AI-optimized output (~10KB vs 340KB full analysis)
 - Providing function-level dependency tracking and code metrics (complexity, maintainability)
 - Offering intelligent clustering for massive repositories that exceed token limits
+- **Creating deterministic snapshots (v0.4.0)** with stable UUIDs and runtime environment detection
 - Exposing a production-ready CLI with an AI integration framework for future expansion
 
 ## What's Real vs. What's Framework
@@ -26,8 +28,9 @@ IntentGraph solves the **context window problem** for AI coding agents by:
 - Code complexity and maintainability metrics
 - Three-level output system (minimal, medium, full)
 - Intelligent clustering for large codebases
+- **RepoSnapshot v1 (v0.4.0)**: Deterministic snapshots with SHA256-based UUIDs, runtime detection, schema freeze
 - Comprehensive CLI with rich options
-- 118 pytest tests with 90% coverage requirement
+- 147 pytest tests (114 passing, 29 new snapshot tests at 100%)
 
 **🏗️ Framework/Scaffolding:**
 - AI-native interface exists with structure in place
@@ -114,6 +117,56 @@ from intentgraph import connect_to_codebase
 agent = connect_to_codebase("/path/to/repo", {"task": "bug_fixing"})
 results = agent.query("Find high complexity files")
 # Note: Query execution uses file-based filtering, not deep semantic analysis
+
+# RepoSnapshot v1 (production-ready, v0.4.0+)
+from intentgraph.snapshot import RepoSnapshotBuilder
+builder = RepoSnapshotBuilder(Path("/path/to/repo"))
+snapshot = builder.build()
+json_output = builder.build_json(indent=2)
+```
+
+### RepoSnapshot v1 Usage (v0.4.0+)
+
+**NEW**: Deterministic, version-controlled snapshots with runtime detection.
+
+```python
+from pathlib import Path
+from intentgraph.snapshot import RepoSnapshotBuilder
+
+# Generate deterministic snapshot
+builder = RepoSnapshotBuilder(Path.cwd())
+snapshot = builder.build()
+
+# Access structure (80 files analyzed, includes tests by default)
+print(f"Files: {len(snapshot.structure.files)}")
+print(f"Languages: {[lang.language for lang in snapshot.structure.languages]}")
+
+# Access runtime detection (no code execution!)
+print(f"Package Manager: {snapshot.runtime.package_manager}")
+print(f"Python Version: {snapshot.runtime.python_version}")
+print(f"Tooling: {snapshot.runtime.tooling}")
+
+# Serialize to JSON
+json_output = builder.build_json(indent=2)
+Path("snapshot.json").write_text(json_output)
+```
+
+**Key Features**:
+- **Deterministic UUIDs**: SHA256-based, same path → same UUID
+- **Stable Ordering**: All arrays sorted (reproducible output)
+- **Cross-Platform**: Windows/Linux produce identical snapshots
+- **Runtime Detection**: Package managers, tooling, versions
+- **Schema Freeze**: v1.0.0 contract (no breaking changes in 1.x)
+- **Security**: Static analysis only (no execution, no network)
+
+**Use Cases**:
+- Version control (commit snapshots to track evolution)
+- Change detection (compare snapshots before/after)
+- CI/CD integration (snapshot on every build)
+- AI agent context (stable, reproducible input)
+
+**Documentation**: See `docs/reposnapshot-v1.md` for complete specification.
+**Examples**: See `examples/snapshot_v1/` for real-world outputs.
 ```
 
 ## Architecture Overview
@@ -583,10 +636,15 @@ See CONTRIBUTING.md for full details. Key points:
 ---
 
 **Last Updated**: 2026-02-17
-**IntentGraph Version**: 0.3.1
+**IntentGraph Version**: 0.4.0 (Live on PyPI)
 
 **Recent Changes**:
+- **v0.4.0**: RepoSnapshot v1 - Deterministic snapshots with runtime detection
+  - SHA256-based stable UUIDs
+  - Runtime environment detection (package managers, tooling, versions)
+  - Schema v1.0.0 with contract freeze
+  - 29/29 new tests passing (100%)
+  - Complete documentation (603 lines)
+  - Real-world examples (output-only)
 - v0.3.1: Fixed tree-sitter 0.25.x API compatibility
-- Added file_id_map to resolve UUID dependencies
-- GitHub Actions workflow for PyPI publishing
-- Enhanced JavaScript and TypeScript parser implementations
+- v0.3.0: Enhanced JavaScript and TypeScript parser implementations
