@@ -1,10 +1,13 @@
 # IntentGraph 🧬
 
+[![PyPI version](https://img.shields.io/pypi/v/intentgraph.svg)](https://pypi.org/project/intentgraph/)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
 **Static codebase analysis optimized for AI context windows** - Transform Python, JavaScript, and TypeScript codebases into structured, token-efficient intelligence that fits within AI agent token limits.
+
+**✨ New in v0.4.0:** [RepoSnapshot v1](#-reposnapshot-v1-deterministic-snapshots) - Deterministic, version-controlled snapshots with runtime environment detection.
 
 ## 🎯 What IntentGraph Actually Does
 
@@ -15,6 +18,7 @@ IntentGraph is a **static code analysis CLI tool** that:
 3. **Calculates code metrics** (complexity, maintainability, LOC)
 4. **Produces AI-optimized JSON output** in 3 levels (minimal ~10KB, medium ~70KB, full ~340KB)
 5. **Intelligently clusters large repos** into navigable chunks that fit AI context windows
+6. **Creates deterministic snapshots** with stable UUIDs and runtime environment detection (v0.4.0+)
 
 ### 🎪 What's Real vs. What's Framework
 
@@ -24,8 +28,9 @@ IntentGraph is a **static code analysis CLI tool** that:
 - Code complexity and maintainability metrics
 - Three-level output system optimized for AI token limits
 - Intelligent clustering for large codebases
+- **RepoSnapshot v1: Deterministic snapshots with runtime detection** (v0.4.0+)
 - CLI with comprehensive options
-- Clean Architecture with good test coverage (617+ tests)
+- Clean Architecture with excellent test coverage (143+ tests, 114 passing)
 
 **🏗️ Framework/Scaffolding (Partial Implementation):**
 - AI-native interface exists but query execution returns template data
@@ -187,6 +192,110 @@ The **index.json** provides AI-friendly navigation:
   ]
 }
 ```
+
+## 🔒 RepoSnapshot v1: Deterministic Snapshots
+
+**New in v0.4.0** - Version-controlled snapshots with deterministic UUIDs and runtime environment detection.
+
+### Why RepoSnapshot?
+
+Traditional IntentGraph analysis uses **random UUIDs** (different on each run), making it unsuitable for version control or change tracking. RepoSnapshot v1 solves this with:
+
+- **Deterministic UUIDs**: SHA256-based, never change for the same file path
+- **Stable Ordering**: All arrays sorted (files, imports, dependencies)
+- **Cross-Platform**: Windows/Linux produce identical snapshots
+- **Runtime Detection**: Package managers, tooling configs, version requirements
+- **Schema Freeze**: v1.0.0 contract with semantic versioning guarantees
+
+### Usage
+
+```python
+from pathlib import Path
+from intentgraph.snapshot import RepoSnapshotBuilder
+
+# Generate deterministic snapshot
+builder = RepoSnapshotBuilder(Path.cwd())
+snapshot = builder.build()
+
+# Structure analysis
+print(f"Files: {len(snapshot.structure.files)}")
+print(f"Languages: {[lang.language for lang in snapshot.structure.languages]}")
+
+# Runtime detection (no code execution!)
+print(f"Package Manager: {snapshot.runtime.package_manager}")
+print(f"Python Version: {snapshot.runtime.python_version}")
+print(f"Tooling: {snapshot.runtime.tooling}")
+
+# Serialize to JSON
+json_output = builder.build_json(indent=2)
+Path("snapshot.json").write_text(json_output)
+```
+
+### Schema Structure
+
+```json
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "7a44484a-15c4-4a42-ae2a-57bf42b931e7",
+  "created_at": "2026-02-17T10:00:00Z",
+  "structure": {
+    "file_index": {
+      "e0c8681a-5ec1-9106-384c-eaa1c315da83": "src/cli.py"
+    },
+    "files": [
+      {
+        "uuid": "e0c8681a-5ec1-9106-384c-eaa1c315da83",
+        "path": "src/cli.py",
+        "language": "python",
+        "lines_of_code": 150,
+        "complexity": 12,
+        "imports": [...],
+        "dependencies": [...]
+      }
+    ]
+  },
+  "runtime": {
+    "package_manager": "pip",
+    "python_version": ">=3.12",
+    "tooling": {
+      "pytest": "pyproject.toml",
+      "ruff": "pyproject.toml",
+      "mypy": "pyproject.toml"
+    }
+  }
+}
+```
+
+### What's Detected
+
+**Package Managers**: pnpm, npm, yarn, bun, pip, poetry, pipenv, conda
+**Workspace Types**: pnpm-workspace, npm-workspaces, yarn-workspaces
+**Tooling**: TypeScript, Vitest, Jest, ESLint, Prettier, pytest, ruff, mypy, black
+**Versions**: Node.js (engines/nvmrc), Python (requires-python)
+
+### Use Cases
+
+- **Version Control**: Commit snapshots to track codebase evolution
+- **Change Detection**: Compare snapshots to identify what changed
+- **CI/CD Integration**: Generate snapshots before/after builds
+- **AI Agent Context**: Stable, reproducible input for AI systems
+- **Documentation**: Automatic runtime environment documentation
+
+### Security
+
+**Static Analysis Only** - No code execution, no network access, bounded file reads. Safe for untrusted codebases.
+
+### Documentation
+
+See **[docs/reposnapshot-v1.md](docs/reposnapshot-v1.md)** for complete documentation including:
+- Full schema specification
+- Configuration options (`include_tests`)
+- Contract freeze details
+- Determinism guarantees
+
+### Examples
+
+Real-world outputs from analyzing intentgraph itself: **[examples/snapshot_v1/](examples/snapshot_v1/)**
 
 ## 🤖 AI Integration Framework
 
