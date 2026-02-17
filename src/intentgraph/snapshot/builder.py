@@ -24,19 +24,35 @@ from .runtime import RuntimeDetector
 def _generate_deterministic_uuid(file_path: str, repo_root: str) -> UUID:
     """Generate deterministic UUID from file path.
 
-    Uses SHA256 hash of canonical file path to generate stable UUID.
+    Uses SHA256 hash of canonical file path to generate stable UUID
+    that is consistent across platforms.
+
+    **Canonicalization rules:**
+    - Path separators: Always use forward slash `/` (POSIX-style)
+    - Case: Preserve original case (no normalization)
+    - Encoding: UTF-8
+    - Format: `{repo_root}::{file_path}` where both use forward slashes
+
+    This ensures Windows (`C:\repo\src\file.py`) and Linux (`/repo/src/file.py`)
+    produce the same UUID for equivalent relative paths.
 
     Args:
-        file_path: Relative file path
-        repo_root: Repository root path
+        file_path: Relative file path (with forward slashes)
+        repo_root: Repository root path (with forward slashes)
 
     Returns:
-        Deterministic UUID based on path
+        Deterministic UUID based on canonical path hash
+
+    Example:
+        >>> # Both produce same UUID:
+        >>> _generate_deterministic_uuid("src/file.py", "/repo")
+        >>> _generate_deterministic_uuid("src/file.py", "C:/repo")  # After Path.as_posix()
     """
-    # Create canonical identifier
+    # Paths are already normalized via Path.as_posix() or str(Path)
+    # which uses forward slashes on all platforms
     canonical = f"{repo_root}::{file_path}"
-    hash_bytes = hashlib.sha256(canonical.encode()).digest()
-    # Use first 16 bytes for UUID
+    hash_bytes = hashlib.sha256(canonical.encode("utf-8")).digest()
+    # Use first 16 bytes for UUID (UUID is 128 bits = 16 bytes)
     return UUID(bytes=hash_bytes[:16])
 
 
@@ -111,11 +127,13 @@ class RepoSnapshotBuilder:
 
         # Build mapping of original UUID -> deterministic UUID
         uuid_mapping: dict[UUID, UUID] = {}
-        repo_root = str(analysis.root)
+        # Normalize repo root to POSIX-style path for cross-platform consistency
+        repo_root = Path(analysis.root).as_posix()
 
         # Generate deterministic UUIDs for all files
         for file_info in analysis.files:
-            file_path = str(file_info.path)
+            # Normalize file path to POSIX-style (forward slashes)
+            file_path = Path(file_info.path).as_posix()
             deterministic_uuid = _generate_deterministic_uuid(file_path, repo_root)
             uuid_mapping[file_info.id] = deterministic_uuid
 
