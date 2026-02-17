@@ -59,15 +59,19 @@ def validate_languages_input(value: str | None) -> str | None:
 
 def filter_result_by_level(result: AnalysisResult, level: str) -> dict:
     """Filter analysis result based on detail level for AI-friendly output."""
-    
+
     if level == "full":
         return result.model_dump()
-    
+
+    # Build UUID to path mapping for dependencies
+    file_id_map = {str(file_info.id): str(file_info.path) for file_info in result.files}
+
     # Start with basic structure
     filtered_result = {
         "analyzed_at": result.analyzed_at,
         "root": str(result.root),
         "language_summary": {str(k): v.model_dump() for k, v in result.language_summary.items()},
+        "file_id_map": file_id_map,  # Add UUID to path mapping
         "files": []
     }
     
