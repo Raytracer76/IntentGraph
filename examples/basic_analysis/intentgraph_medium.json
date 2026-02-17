@@ -1,0 +1,661 @@
+{
+  "output_level": "medium",
+  "description": "Medium detail (~70KB) - adds key symbols, exports, complexity",
+  "total_files": 51,
+  "files_included": 20,
+  "languages": {
+    "python": {
+      "file_count": 43,
+      "total_bytes": 337541
+    },
+    "javascript": {
+      "file_count": 4,
+      "total_bytes": 2876
+    },
+    "typescript": {
+      "file_count": 4,
+      "total_bytes": 2941
+    }
+  },
+  "files": [
+    {
+      "path": "ai_interface_demo.py",
+      "language": "python",
+      "loc": 122,
+      "complexity": 9,
+      "imports": [
+        "from src.intentgraph.ai import get_capabilities_manifest",
+        "from src.intentgraph.ai.query import QueryBuilder",
+        "from src.intentgraph.ai.agent import AgentContext",
+        "from src.intentgraph.ai.response import TokenBudget, ResponseOptimizer",
+        "from src.intentgraph.ai.navigation import AutonomousNavigator, NavigationContext",
+        "import traceback"
+      ],
+      "dependencies_count": 5,
+      "key_symbols": [
+        {
+          "name": "demonstrate_ai_interface",
+          "type": "function"
+        },
+        {
+          "name": "capabilities",
+          "type": "variable"
+        },
+        {
+          "name": "analysis_types",
+          "type": "variable"
+        },
+        {
+          "name": "agent_context",
+          "type": "variable"
+        },
+        {
+          "name": "repo_overview",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 24
+    },
+    {
+      "path": "setup.py",
+      "language": "python",
+      "loc": 4,
+      "complexity": 2,
+      "imports": [
+        "from setuptools import setup"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [],
+      "exports_count": 0
+    },
+    {
+      "path": "examples/ai_agent_integration/output_levels_demo.py",
+      "language": "python",
+      "loc": 162,
+      "complexity": 21,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "demo_output_levels",
+          "type": "function"
+        },
+        {
+          "name": "repo_path",
+          "type": "variable"
+        },
+        {
+          "name": "levels",
+          "type": "variable"
+        },
+        {
+          "name": "results",
+          "type": "variable"
+        },
+        {
+          "name": "result",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 23
+    },
+    {
+      "path": "examples/ai_native/autonomous_agent_demo.py",
+      "language": "python",
+      "loc": 226,
+      "complexity": 28,
+      "imports": [
+        "import json",
+        "from pathlib import Path",
+        "import sys",
+        "from intentgraph import connect_to_codebase, get_capabilities_manifest, analyze_for_ai, quick_explore"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "demonstrate_autonomous_discovery",
+          "type": "function"
+        },
+        {
+          "name": "capabilities",
+          "type": "variable"
+        },
+        {
+          "name": "demonstrate_natural_language_queries",
+          "type": "function"
+        },
+        {
+          "name": "agent",
+          "type": "variable"
+        },
+        {
+          "name": "queries",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 43
+    },
+    {
+      "path": "examples/basic_usage/analyze_repository.py",
+      "language": "python",
+      "loc": 99,
+      "complexity": 11,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "from intentgraph.domain.models import Language",
+        "from intentgraph.application.streaming_analyzer import StreamingAnalyzer",
+        "from intentgraph.application.streaming_analyzer import IncrementalAnalyzer"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "analyze_repository_basic",
+          "type": "function"
+        },
+        {
+          "name": "analyzer",
+          "type": "variable"
+        },
+        {
+          "name": "result",
+          "type": "variable"
+        },
+        {
+          "name": "analyze_with_options",
+          "type": "function"
+        },
+        {
+          "name": "analyzer",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 23
+    },
+    {
+      "path": "examples/clustering/cluster_mode_comparison.py",
+      "language": "python",
+      "loc": 203,
+      "complexity": 25,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any",
+        "import shutil"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "run_clustering_mode",
+          "type": "function"
+        },
+        {
+          "name": "output_dir",
+          "type": "variable"
+        },
+        {
+          "name": "cmd",
+          "type": "variable"
+        },
+        {
+          "name": "result",
+          "type": "variable"
+        },
+        {
+          "name": "index_path",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 25
+    },
+    {
+      "path": "examples/clustering/large_codebase_navigation.py",
+      "language": "python",
+      "loc": 145,
+      "complexity": 21,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "run_clustering_analysis",
+          "type": "function"
+        },
+        {
+          "name": "cmd",
+          "type": "variable"
+        },
+        {
+          "name": "result",
+          "type": "variable"
+        },
+        {
+          "name": "index_path",
+          "type": "variable"
+        },
+        {
+          "name": "demonstrate_ai_navigation_strategy",
+          "type": "function"
+        }
+      ],
+      "exports_count": 20
+    },
+    {
+      "path": "examples/repo_analysis/compare_outputs.py",
+      "language": "python",
+      "loc": 119,
+      "complexity": 12,
+      "imports": [
+        "from pathlib import Path",
+        "import json"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "load_outputs",
+          "type": "function"
+        },
+        {
+          "name": "base_path",
+          "type": "variable"
+        },
+        {
+          "name": "traditional_path",
+          "type": "variable"
+        },
+        {
+          "name": "snapshot_path",
+          "type": "variable"
+        },
+        {
+          "name": "traditional",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 18
+    },
+    {
+      "path": "examples/repo_analysis/generate_snapshot_v1.py",
+      "language": "python",
+      "loc": 31,
+      "complexity": 3,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph.snapshot import RepoSnapshotBuilder",
+        "import json"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "main",
+          "type": "function"
+        },
+        {
+          "name": "repo_path",
+          "type": "variable"
+        },
+        {
+          "name": "builder",
+          "type": "variable"
+        },
+        {
+          "name": "snapshot",
+          "type": "variable"
+        },
+        {
+          "name": "output_path",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 6
+    },
+    {
+      "path": "examples/repo_analysis/generate_traditional_analysis.py",
+      "language": "python",
+      "loc": 48,
+      "complexity": 2,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "import json"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "main",
+          "type": "function"
+        },
+        {
+          "name": "repo_path",
+          "type": "variable"
+        },
+        {
+          "name": "analyzer",
+          "type": "variable"
+        },
+        {
+          "name": "result",
+          "type": "variable"
+        },
+        {
+          "name": "output",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 7
+    },
+    {
+      "path": "fixtures/javascript/sample_classes.js",
+      "language": "javascript",
+      "loc": 31,
+      "complexity": 0,
+      "imports": [],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "BaseClass",
+          "type": "class"
+        },
+        {
+          "name": "BaseClass",
+          "type": "class"
+        }
+      ],
+      "exports_count": 3
+    },
+    {
+      "path": "fixtures/javascript/sample_es6.js",
+      "language": "javascript",
+      "loc": 30,
+      "complexity": 0,
+      "imports": [
+        "import ... from './api'",
+        "import ... from './config'",
+        "import ... from './logger'"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "initialize",
+          "type": "function"
+        },
+        {
+          "name": "initialize",
+          "type": "function"
+        },
+        {
+          "name": "Application",
+          "type": "class"
+        }
+      ],
+      "exports_count": 0
+    },
+    {
+      "path": "fixtures/javascript/sample_functions.js",
+      "language": "javascript",
+      "loc": 36,
+      "complexity": 0,
+      "imports": [],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "regularFunction",
+          "type": "function"
+        },
+        {
+          "name": "regularFunction",
+          "type": "function"
+        },
+        {
+          "name": "regularFunction",
+          "type": "function"
+        }
+      ],
+      "exports_count": 8
+    },
+    {
+      "path": "fixtures/javascript/sample_module.js",
+      "language": "javascript",
+      "loc": 25,
+      "complexity": 0,
+      "imports": [
+        "require('./helper')",
+        "require('./utils')"
+      ],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "processData",
+          "type": "function"
+        },
+        {
+          "name": "processData",
+          "type": "function"
+        },
+        {
+          "name": "DataProcessor",
+          "type": "class"
+        }
+      ],
+      "exports_count": 0
+    },
+    {
+      "path": "fixtures/typescript/sample_class.ts",
+      "language": "typescript",
+      "loc": 37,
+      "complexity": 10,
+      "imports": [],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "Calculator",
+          "type": "class"
+        },
+        {
+          "name": "constructor",
+          "type": "function"
+        },
+        {
+          "name": "add",
+          "type": "function"
+        },
+        {
+          "name": "subtract",
+          "type": "function"
+        },
+        {
+          "name": "multiply",
+          "type": "function"
+        }
+      ],
+      "exports_count": 8
+    },
+    {
+      "path": "fixtures/typescript/sample_exports.ts",
+      "language": "typescript",
+      "loc": 23,
+      "complexity": 4,
+      "imports": [],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "LogLevel",
+          "type": "enum"
+        },
+        {
+          "name": "Status",
+          "type": "enum"
+        },
+        {
+          "name": "processData",
+          "type": "function"
+        },
+        {
+          "name": "logMessage",
+          "type": "function"
+        },
+        {
+          "name": "internalHelper",
+          "type": "function"
+        }
+      ],
+      "exports_count": 4
+    },
+    {
+      "path": "fixtures/typescript/sample_imports.ts",
+      "language": "typescript",
+      "loc": 24,
+      "complexity": 7,
+      "imports": [
+        "import ... from './sample_class'",
+        "import ... from './sample_exports'",
+        "import ... from './sample_interface'"
+      ],
+      "dependencies_count": 6,
+      "key_symbols": [
+        {
+          "name": "DataProcessor",
+          "type": "class"
+        },
+        {
+          "name": "constructor",
+          "type": "function"
+        },
+        {
+          "name": "processUser",
+          "type": "function"
+        },
+        {
+          "name": "processProduct",
+          "type": "function"
+        },
+        {
+          "name": "calculateTotal",
+          "type": "function"
+        }
+      ],
+      "exports_count": 6
+    },
+    {
+      "path": "fixtures/typescript/sample_interface.ts",
+      "language": "typescript",
+      "loc": 25,
+      "complexity": 0,
+      "imports": [],
+      "dependencies_count": 0,
+      "key_symbols": [
+        {
+          "name": "User",
+          "type": "interface"
+        },
+        {
+          "name": "Product",
+          "type": "interface"
+        },
+        {
+          "name": "UserRole",
+          "type": "type"
+        },
+        {
+          "name": "Status",
+          "type": "type"
+        },
+        {
+          "name": "ApiResponse",
+          "type": "type"
+        }
+      ],
+      "exports_count": 5
+    },
+    {
+      "path": "src/intentgraph/cli.py",
+      "language": "python",
+      "loc": 339,
+      "complexity": 37,
+      "imports": [
+        "import json",
+        "import re",
+        "import sys",
+        "import unicodedata",
+        "from pathlib import Path",
+        "import click",
+        "import typer",
+        "from rich.console import Console",
+        "from rich.logging import RichHandler",
+        "from rich.progress import Progress, SpinnerColumn, TextColumn"
+      ],
+      "dependencies_count": 5,
+      "key_symbols": [
+        {
+          "name": "app",
+          "type": "variable"
+        },
+        {
+          "name": "console",
+          "type": "variable"
+        },
+        {
+          "name": "validate_languages_input",
+          "type": "function"
+        },
+        {
+          "name": "normalized",
+          "type": "variable"
+        },
+        {
+          "name": "valid_languages",
+          "type": "variable"
+        }
+      ],
+      "exports_count": 45
+    },
+    {
+      "path": "src/intentgraph/__init__.py",
+      "language": "python",
+      "loc": 45,
+      "complexity": 2,
+      "imports": [
+        "from .domain.models import AnalysisResult, FileInfo, Language, LanguageSummary",
+        "from .ai import connect_to_codebase, CodebaseAgent, get_capabilities_manifest",
+        "from .application.analyzer import RepositoryAnalyzer"
+      ],
+      "dependencies_count": 3,
+      "key_symbols": [
+        {
+          "name": "__version__",
+          "type": "variable"
+        },
+        {
+          "name": "__author__",
+          "type": "variable"
+        },
+        {
+          "name": "__email__",
+          "type": "variable"
+        },
+        {
+          "name": "__all__",
+          "type": "variable"
+        },
+        {
+          "name": "analyze_for_ai",
+          "type": "function"
+        }
+      ],
+      "exports_count": 8
+    }
+  ]
+}

@@ -1,0 +1,657 @@
+{
+  "output_level": "minimal",
+  "description": "AI-optimized minimal output (~10KB) - paths, dependencies, imports only",
+  "total_files": 51,
+  "languages": {
+    "python": {
+      "file_count": 43,
+      "total_bytes": 337541
+    },
+    "javascript": {
+      "file_count": 4,
+      "total_bytes": 2876
+    },
+    "typescript": {
+      "file_count": 4,
+      "total_bytes": 2941
+    }
+  },
+  "files": [
+    {
+      "path": "ai_interface_demo.py",
+      "language": "python",
+      "loc": 122,
+      "imports": [
+        "from src.intentgraph.ai import get_capabilities_manifest",
+        "from src.intentgraph.ai.query import QueryBuilder",
+        "from src.intentgraph.ai.agent import AgentContext",
+        "from src.intentgraph.ai.response import TokenBudget, ResponseOptimizer",
+        "from src.intentgraph.ai.navigation import AutonomousNavigator, NavigationContext",
+        "import traceback"
+      ],
+      "dependencies_count": 5
+    },
+    {
+      "path": "setup.py",
+      "language": "python",
+      "loc": 4,
+      "imports": [
+        "from setuptools import setup"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/ai_agent_integration/output_levels_demo.py",
+      "language": "python",
+      "loc": 162,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/ai_native/autonomous_agent_demo.py",
+      "language": "python",
+      "loc": 226,
+      "imports": [
+        "import json",
+        "from pathlib import Path",
+        "import sys",
+        "from intentgraph import connect_to_codebase, get_capabilities_manifest, analyze_for_ai, quick_explore"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/basic_usage/analyze_repository.py",
+      "language": "python",
+      "loc": 99,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "from intentgraph.domain.models import Language",
+        "from intentgraph.application.streaming_analyzer import StreamingAnalyzer",
+        "from intentgraph.application.streaming_analyzer import IncrementalAnalyzer"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/clustering/cluster_mode_comparison.py",
+      "language": "python",
+      "loc": 203,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any",
+        "import shutil"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/clustering/large_codebase_navigation.py",
+      "language": "python",
+      "loc": 145,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/repo_analysis/compare_outputs.py",
+      "language": "python",
+      "loc": 119,
+      "imports": [
+        "from pathlib import Path",
+        "import json"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/repo_analysis/generate_snapshot_v1.py",
+      "language": "python",
+      "loc": 31,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph.snapshot import RepoSnapshotBuilder",
+        "import json"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "examples/repo_analysis/generate_traditional_analysis.py",
+      "language": "python",
+      "loc": 48,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "import json"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/javascript/sample_classes.js",
+      "language": "javascript",
+      "loc": 31,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/javascript/sample_es6.js",
+      "language": "javascript",
+      "loc": 30,
+      "imports": [
+        "import ... from './api'",
+        "import ... from './config'",
+        "import ... from './logger'"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/javascript/sample_functions.js",
+      "language": "javascript",
+      "loc": 36,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/javascript/sample_module.js",
+      "language": "javascript",
+      "loc": 25,
+      "imports": [
+        "require('./helper')",
+        "require('./utils')"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/typescript/sample_class.ts",
+      "language": "typescript",
+      "loc": 37,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/typescript/sample_exports.ts",
+      "language": "typescript",
+      "loc": 23,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "fixtures/typescript/sample_imports.ts",
+      "language": "typescript",
+      "loc": 24,
+      "imports": [
+        "import ... from './sample_class'",
+        "import ... from './sample_exports'",
+        "import ... from './sample_interface'"
+      ],
+      "dependencies_count": 6
+    },
+    {
+      "path": "fixtures/typescript/sample_interface.ts",
+      "language": "typescript",
+      "loc": 25,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/cli.py",
+      "language": "python",
+      "loc": 339,
+      "imports": [
+        "import json",
+        "import re",
+        "import sys",
+        "import unicodedata",
+        "from pathlib import Path",
+        "import click",
+        "import typer",
+        "from rich.console import Console",
+        "from rich.logging import RichHandler",
+        "from rich.progress import Progress, SpinnerColumn, TextColumn"
+      ],
+      "dependencies_count": 5
+    },
+    {
+      "path": "src/intentgraph/__init__.py",
+      "language": "python",
+      "loc": 45,
+      "imports": [
+        "from .domain.models import AnalysisResult, FileInfo, Language, LanguageSummary",
+        "from .ai import connect_to_codebase, CodebaseAgent, get_capabilities_manifest",
+        "from .application.analyzer import RepositoryAnalyzer"
+      ],
+      "dependencies_count": 3
+    },
+    {
+      "path": "src/intentgraph/adapters/file_repository.py",
+      "language": "python",
+      "loc": 178,
+      "imports": [
+        "import hashlib",
+        "import os",
+        "from abc import ABC, abstractmethod",
+        "from pathlib import Path",
+        "from typing import Dict, Optional"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/adapters/git.py",
+      "language": "python",
+      "loc": 93,
+      "imports": [
+        "import logging",
+        "from pathlib import Path",
+        "import pathspec",
+        "from git import Repo"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/adapters/output.py",
+      "language": "python",
+      "loc": 94,
+      "imports": [
+        "import json",
+        "import logging",
+        "from pathlib import Path",
+        "from types import MappingProxyType",
+        "from typing import Any",
+        "from uuid import UUID",
+        "import orjson",
+        "from ..domain.models import AnalysisResult",
+        "import jsonschema"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/adapters/__init__.py",
+      "language": "python",
+      "loc": 1,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/ai/agent.py",
+      "language": "python",
+      "loc": 209,
+      "imports": [
+        "import json",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any, Optional, Union",
+        "from dataclasses import dataclass",
+        "from enum import Enum",
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..application.clustering import ClusteringEngine",
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel",
+        "from .manifest import get_capabilities_manifest",
+        "from .query import QueryBuilder, SemanticQuery"
+      ],
+      "dependencies_count": 4
+    },
+    {
+      "path": "src/intentgraph/ai/manifest.py",
+      "language": "python",
+      "loc": 267,
+      "imports": [
+        "from typing import Dict, Any, List",
+        "from datetime import datetime",
+        "import json",
+        "from ..domain.models import Language"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/ai/navigation.py",
+      "language": "python",
+      "loc": 454,
+      "imports": [
+        "from typing import Dict, Any, List, Optional, Union, Tuple",
+        "from pathlib import Path",
+        "import json",
+        "from dataclasses import dataclass",
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..application.clustering import ClusteringEngine",
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel",
+        "from ..domain.models import Language, AnalysisResult",
+        "from .query import SemanticQuery, QueryType"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/ai/query.py",
+      "language": "python",
+      "loc": 255,
+      "imports": [
+        "from typing import Dict, Any, List, Optional, Union",
+        "from dataclasses import dataclass, field",
+        "from enum import Enum",
+        "import re",
+        "from pathlib import Path"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/ai/response.py",
+      "language": "python",
+      "loc": 373,
+      "imports": [
+        "from typing import Dict, Any, List, Optional, Union",
+        "from dataclasses import dataclass",
+        "from enum import Enum",
+        "import json",
+        "import re"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/ai/__init__.py",
+      "language": "python",
+      "loc": 42,
+      "imports": [
+        "from .agent import CodebaseAgent",
+        "from .manifest import get_capabilities_manifest",
+        "from .query import SemanticQuery, QueryBuilder",
+        "from .response import ResponseOptimizer, TokenBudget",
+        "from .navigation import AutonomousNavigator"
+      ],
+      "dependencies_count": 5
+    },
+    {
+      "path": "src/intentgraph/application/analyzer.py",
+      "language": "python",
+      "loc": 78,
+      "imports": [
+        "import logging",
+        "from abc import ABC, abstractmethod",
+        "from concurrent.futures import ProcessPoolExecutor, as_completed",
+        "from multiprocessing import cpu_count",
+        "from pathlib import Path",
+        "from ..adapters.file_repository import FileRepository, FileSystemRepository",
+        "from ..adapters.parsers.base import LanguageParser",
+        "from ..domain.exceptions import InvalidRepositoryError",
+        "from ..domain.models import AnalysisResult, Language",
+        "from .services import FileDiscoveryService, CodeAnalysisService, DependencyGraphService, LanguageSummaryService"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/application/clustering.py",
+      "language": "python",
+      "loc": 373,
+      "imports": [
+        "import json",
+        "from collections import defaultdict",
+        "from pathlib import Path",
+        "from typing import Dict, List, Set, Tuple, Optional",
+        "from uuid import uuid4",
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel, ClusterFile, ClusterMetadata, ClusterSummary, CrossClusterDependency, ClusterIndex, ClusterResult",
+        "from ..domain.models import AnalysisResult, FileInfo"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/application/services.py",
+      "language": "python",
+      "loc": 243,
+      "imports": [
+        "import logging",
+        "from pathlib import Path",
+        "from typing import Optional",
+        "from ..adapters.git import GitIgnoreHandler",
+        "from ..adapters.parsers import get_parser_for_language",
+        "from ..domain.exceptions import InvalidRepositoryError",
+        "from ..domain.graph import DependencyGraph",
+        "from ..domain.models import AnalysisResult, FileInfo, Language, LanguageSummary",
+        "from ..adapters.parsers.enhanced_python_parser import EnhancedPythonParser",
+        "from ..adapters.parsers.typescript_parser import TypeScriptParser"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/application/streaming_analyzer.py",
+      "language": "python",
+      "loc": 79,
+      "imports": [
+        "import logging",
+        "from pathlib import Path",
+        "from typing import Iterator, List",
+        "from ..domain.models import FileInfo, AnalysisResult, Language",
+        "from .analyzer import RepositoryAnalyzer"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/application/__init__.py",
+      "language": "python",
+      "loc": 1,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/domain/clustering.py",
+      "language": "python",
+      "loc": 94,
+      "imports": [
+        "from dataclasses import dataclass, field",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from typing import Optional, Dict, List",
+        "from uuid import UUID, uuid4",
+        "from pydantic import BaseModel, Field"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/domain/exceptions.py",
+      "language": "python",
+      "loc": 14,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/domain/graph.py",
+      "language": "python",
+      "loc": 50,
+      "imports": [
+        "from uuid import UUID",
+        "import networkx",
+        "from .models import FileInfo"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/domain/models.py",
+      "language": "python",
+      "loc": 146,
+      "imports": [
+        "import hashlib",
+        "from dataclasses import dataclass, field",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from typing import Optional, Any",
+        "from uuid import UUID, uuid4",
+        "from pydantic import BaseModel, Field, validator"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/domain/__init__.py",
+      "language": "python",
+      "loc": 1,
+      "imports": [],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/snapshot/builder.py",
+      "language": "python",
+      "loc": 152,
+      "imports": [
+        "import hashlib",
+        "from datetime import datetime",
+        "from pathlib import Path",
+        "from uuid import UUID, uuid4",
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..domain.models import AnalysisResult",
+        "from .models import FileEntry, LanguageInfo, RepoSnapshot, RuntimeSnapshot, StructureSnapshot",
+        "from .runtime import RuntimeDetector"
+      ],
+      "dependencies_count": 2
+    },
+    {
+      "path": "src/intentgraph/snapshot/models.py",
+      "language": "python",
+      "loc": 143,
+      "imports": [
+        "from collections.abc import Callable",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from typing import Any",
+        "from uuid import UUID",
+        "from pydantic import BaseModel, Field"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/snapshot/runtime.py",
+      "language": "python",
+      "loc": 247,
+      "imports": [
+        "import json",
+        "import tomllib",
+        "from pathlib import Path",
+        "from .models import PackageManager, ToolingInfo, WorkspaceType"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/snapshot/__init__.py",
+      "language": "python",
+      "loc": 31,
+      "imports": [
+        "from .builder import RepoSnapshotBuilder",
+        "from .models import FileEntry, LanguageInfo, PackageManager, RepoSnapshot, RuntimeSnapshot, StructureSnapshot, ToolingInfo, WorkspaceType"
+      ],
+      "dependencies_count": 2
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/base.py",
+      "language": "python",
+      "loc": 93,
+      "imports": [
+        "from abc import ABC, abstractmethod",
+        "from pathlib import Path",
+        "from typing import Optional",
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency"
+      ],
+      "dependencies_count": 0
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/enhanced_python_parser.py",
+      "language": "python",
+      "loc": 483,
+      "imports": [
+        "import ast",
+        "import logging",
+        "from pathlib import Path",
+        "from typing import Optional, Any",
+        "from uuid import uuid4",
+        "from .base import LanguageParser",
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/go_parser.py",
+      "language": "python",
+      "loc": 106,
+      "imports": [
+        "import json",
+        "import logging",
+        "import os",
+        "import subprocess",
+        "from pathlib import Path",
+        "from .base import LanguageParser"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/javascript_parser.py",
+      "language": "python",
+      "loc": 311,
+      "imports": [
+        "import hashlib",
+        "import logging",
+        "from pathlib import Path",
+        "from typing import Optional, Any",
+        "from uuid import UUID",
+        "from tree_sitter_language_pack import get_language, get_parser",
+        "from .base import LanguageParser",
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from tree_sitter import QueryCursor, Query"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/python_parser.py",
+      "language": "python",
+      "loc": 77,
+      "imports": [
+        "import logging",
+        "from pathlib import Path",
+        "import grimp",
+        "from .base import LanguageParser",
+        "import ast"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/typescript_parser.py",
+      "language": "python",
+      "loc": 387,
+      "imports": [
+        "import hashlib",
+        "import logging",
+        "from pathlib import Path",
+        "from typing import Optional, Any",
+        "from uuid import UUID, uuid4",
+        "from .base import LanguageParser",
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from tree_sitter import QueryCursor",
+        "from tree_sitter_language_pack import get_language, get_parser",
+        "from tree_sitter import Query"
+      ],
+      "dependencies_count": 1
+    },
+    {
+      "path": "src/intentgraph/adapters/parsers/__init__.py",
+      "language": "python",
+      "loc": 39,
+      "imports": [
+        "from typing import Optional",
+        "from ...domain.models import Language",
+        "from .base import LanguageParser",
+        "from .go_parser import GoParser",
+        "from .javascript_parser import JavaScriptParser",
+        "from .python_parser import PythonParser",
+        "from .typescript_parser import TypeScriptParser",
+        "import logging"
+      ],
+      "dependencies_count": 5
+    }
+  ]
+}

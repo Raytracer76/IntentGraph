@@ -1,0 +1,198 @@
+{
+  "output_level": "full",
+  "description": "Complete analysis - all metadata, symbols, metrics",
+  "total_files": 51,
+  "files_included": 10,
+  "languages": {
+    "python": {
+      "file_count": 43,
+      "total_bytes": 337541
+    },
+    "javascript": {
+      "file_count": 4,
+      "total_bytes": 2876
+    },
+    "typescript": {
+      "file_count": 4,
+      "total_bytes": 2941
+    }
+  },
+  "files": [
+    {
+      "id": "6c392b2e-0fa6-490d-bcb2-c2a49011d9e8",
+      "path": "ai_interface_demo.py",
+      "language": "python",
+      "loc": 122,
+      "complexity": 9,
+      "maintainability": 92.92,
+      "imports": [
+        "from src.intentgraph.ai import get_capabilities_manifest",
+        "from src.intentgraph.ai.query import QueryBuilder",
+        "from src.intentgraph.ai.agent import AgentContext",
+        "from src.intentgraph.ai.response import TokenBudget, ResponseOptimizer",
+        "from src.intentgraph.ai.navigation import AutonomousNavigator, NavigationContext",
+        "import traceback"
+      ],
+      "dependencies": [
+        "ad578573-87c7-4d36-a9b1-aabf015bbc28",
+        "bfe37d1c-5543-4792-baae-b76de7929f1c",
+        "364573fc-16cc-4d87-9786-1cd7bef60c6b",
+        "2179dc77-0420-44cb-83ee-ee909742db74",
+        "289cae9f-46e1-475f-b4a6-8fd77aa82eed"
+      ],
+      "symbols_count": 24,
+      "exports_count": 24
+    },
+    {
+      "id": "0f24bebc-a469-4521-bf4c-4ed1de86b314",
+      "path": "setup.py",
+      "language": "python",
+      "loc": 4,
+      "complexity": 2,
+      "maintainability": 159.45,
+      "imports": [
+        "from setuptools import setup"
+      ],
+      "dependencies": [],
+      "symbols_count": 0,
+      "exports_count": 0
+    },
+    {
+      "id": "968e1a31-244a-42a7-816e-ddaa0cd5c766",
+      "path": "examples/ai_agent_integration/output_levels_demo.py",
+      "language": "python",
+      "loc": 162,
+      "complexity": 21,
+      "maintainability": 21.78,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path"
+      ],
+      "dependencies": [],
+      "symbols_count": 23,
+      "exports_count": 23
+    },
+    {
+      "id": "c10da69a-1683-48bc-a00f-d530bc12c79c",
+      "path": "examples/ai_native/autonomous_agent_demo.py",
+      "language": "python",
+      "loc": 226,
+      "complexity": 28,
+      "maintainability": null,
+      "imports": [
+        "import json",
+        "from pathlib import Path",
+        "import sys",
+        "from intentgraph import connect_to_codebase, get_capabilities_manifest, analyze_for_ai, quick_explore"
+      ],
+      "dependencies": [],
+      "symbols_count": 43,
+      "exports_count": 43
+    },
+    {
+      "id": "ffc5cdc6-6c7d-466e-aade-8c8ed2f94511",
+      "path": "examples/basic_usage/analyze_repository.py",
+      "language": "python",
+      "loc": 99,
+      "complexity": 11,
+      "maintainability": 88.96,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "from intentgraph.domain.models import Language",
+        "from intentgraph.application.streaming_analyzer import StreamingAnalyzer",
+        "from intentgraph.application.streaming_analyzer import IncrementalAnalyzer"
+      ],
+      "dependencies": [],
+      "symbols_count": 23,
+      "exports_count": 23
+    },
+    {
+      "id": "beb8b8fe-3bd1-47e5-8e73-46a806504cd7",
+      "path": "examples/clustering/cluster_mode_comparison.py",
+      "language": "python",
+      "loc": 203,
+      "complexity": 25,
+      "maintainability": null,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any",
+        "import shutil"
+      ],
+      "dependencies": [],
+      "symbols_count": 25,
+      "exports_count": 25
+    },
+    {
+      "id": "09d3caa0-60e3-4ae2-8c34-84dc988cf078",
+      "path": "examples/clustering/large_codebase_navigation.py",
+      "language": "python",
+      "loc": 145,
+      "complexity": 21,
+      "maintainability": 25.23,
+      "imports": [
+        "import json",
+        "import subprocess",
+        "import sys",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any"
+      ],
+      "dependencies": [],
+      "symbols_count": 20,
+      "exports_count": 20
+    },
+    {
+      "id": "3c2f3e3c-2654-42cf-9fa3-e0a1f838e908",
+      "path": "examples/repo_analysis/compare_outputs.py",
+      "language": "python",
+      "loc": 119,
+      "complexity": 12,
+      "maintainability": 81.0,
+      "imports": [
+        "from pathlib import Path",
+        "import json"
+      ],
+      "dependencies": [],
+      "symbols_count": 18,
+      "exports_count": 18
+    },
+    {
+      "id": "ba31c3a7-4efc-4ded-80ac-1e90fc722730",
+      "path": "examples/repo_analysis/generate_snapshot_v1.py",
+      "language": "python",
+      "loc": 31,
+      "complexity": 3,
+      "maintainability": 147.81,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph.snapshot import RepoSnapshotBuilder",
+        "import json"
+      ],
+      "dependencies": [],
+      "symbols_count": 6,
+      "exports_count": 6
+    },
+    {
+      "id": "aafd5797-d662-4c0b-aeb7-3e35cefcd709",
+      "path": "examples/repo_analysis/generate_traditional_analysis.py",
+      "language": "python",
+      "loc": 48,
+      "complexity": 2,
+      "maintainability": 148.87,
+      "imports": [
+        "from pathlib import Path",
+        "from intentgraph import RepositoryAnalyzer",
+        "import json"
+      ],
+      "dependencies": [],
+      "symbols_count": 7,
+      "exports_count": 7
+    }
+  ]
+}
