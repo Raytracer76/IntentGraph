@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **IntentGraph** is a static code analysis CLI tool optimized for AI agent context windows. It analyzes Python, JavaScript, and TypeScript codebases (with basic Go support) and generates token-efficient structured output that fits within AI agent limitations.
 
-**Version**: 0.3.0-dev
+**Version**: 0.3.1
 **Python**: 3.12+
 **License**: MIT
 
@@ -27,7 +27,7 @@ IntentGraph solves the **context window problem** for AI coding agents by:
 - Three-level output system (minimal, medium, full)
 - Intelligent clustering for large codebases
 - Comprehensive CLI with rich options
-- 617+ tests (Python: pytest, JavaScript: 301 tests, TypeScript: 316 tests)
+- 118 pytest tests with 90% coverage requirement
 
 **🏗️ Framework/Scaffolding:**
 - AI-native interface exists with structure in place
@@ -556,7 +556,7 @@ When modifying AI-native interface (`src/intentgraph/ai/`):
 
 **Version**: Defined in `src/intentgraph/__init__.py:__version__`
 
-**Current**: `0.3.0-dev` (development version)
+**Current**: `0.3.1` (released version)
 
 **Versioning**: Semantic versioning (MAJOR.MINOR.PATCH)
 - MAJOR: Breaking changes to public API or AI-native interface
@@ -582,5 +582,11 @@ See CONTRIBUTING.md for full details. Key points:
 
 ---
 
-**Last Updated**: 2026-02-09
-**IntentGraph Version**: 0.3.0-dev
+**Last Updated**: 2026-02-17
+**IntentGraph Version**: 0.3.1
+
+**Recent Changes**:
+- v0.3.1: Fixed tree-sitter 0.25.x API compatibility
+- Added file_id_map to resolve UUID dependencies
+- GitHub Actions workflow for PyPI publishing
+- Enhanced JavaScript and TypeScript parser implementations
