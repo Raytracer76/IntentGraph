@@ -1,0 +1,22 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "python-poetry-fixture"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.poetry]
+name = "python-poetry-fixture"
+version = "0.1.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

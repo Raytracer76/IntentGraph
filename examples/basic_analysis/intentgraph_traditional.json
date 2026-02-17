@@ -1,0 +1,893 @@
+{
+  "repository": "/mnt/c/Users/nliga/OneDrive/Documents/Repos/intentgraph",
+  "analyzed_files": 48,
+  "language_summary": {
+    "python": {
+      "file_count": 40,
+      "total_bytes": 328211
+    },
+    "javascript": {
+      "file_count": 4,
+      "total_bytes": 2876
+    },
+    "typescript": {
+      "file_count": 4,
+      "total_bytes": 2941
+    }
+  },
+  "files": [
+    {
+      "id": "c7d4fa2a-c9cf-466c-abb9-699709894fa3",
+      "path": "ai_interface_demo.py",
+      "language": "python",
+      "lines_of_code": 122,
+      "complexity_score": 9,
+      "maintainability_index": 92.92,
+      "imports": [
+        "from src.intentgraph.ai import get_capabilities_manifest",
+        "from src.intentgraph.ai.agent import AgentContext",
+        "from src.intentgraph.ai.navigation import AutonomousNavigator, NavigationContext",
+        "from src.intentgraph.ai.query import QueryBuilder",
+        "from src.intentgraph.ai.response import TokenBudget, ResponseOptimizer",
+        "import traceback"
+      ],
+      "dependencies": [
+        "d3e24bf6-8d89-4c2e-bc1d-e496f9af69a5",
+        "dbb186e4-c645-47b9-86db-669f4e54b022",
+        "0c22e338-174d-49d1-9405-57d5d7701344",
+        "35b2625a-eb42-4106-ad9b-927cbd62f913",
+        "ad794441-d985-481d-a9a6-22fbd89805ae"
+      ],
+      "symbols_count": 24
+    },
+    {
+      "id": "1cbbcd0b-e38a-492d-867c-1e64f7bf3bd2",
+      "path": "examples/ai_agent_integration/output_levels_demo.py",
+      "language": "python",
+      "lines_of_code": 162,
+      "complexity_score": 21,
+      "maintainability_index": 21.78,
+      "imports": [
+        "from pathlib import Path",
+        "import json",
+        "import subprocess"
+      ],
+      "dependencies": [],
+      "symbols_count": 23
+    },
+    {
+      "id": "775ef004-175a-4af1-acf0-caf1de3c56b8",
+      "path": "examples/ai_native/autonomous_agent_demo.py",
+      "language": "python",
+      "lines_of_code": 226,
+      "complexity_score": 28,
+      "maintainability_index": null,
+      "imports": [
+        "from intentgraph import connect_to_codebase, get_capabilities_manifest, analyze_for_ai, quick_explore",
+        "from pathlib import Path",
+        "import json",
+        "import sys"
+      ],
+      "dependencies": [],
+      "symbols_count": 43
+    },
+    {
+      "id": "73fae0fd-67e9-4510-81d6-6b4cb2328d6d",
+      "path": "examples/basic_usage/analyze_repository.py",
+      "language": "python",
+      "lines_of_code": 99,
+      "complexity_score": 11,
+      "maintainability_index": 88.96,
+      "imports": [
+        "from intentgraph import RepositoryAnalyzer",
+        "from intentgraph.application.streaming_analyzer import IncrementalAnalyzer",
+        "from intentgraph.application.streaming_analyzer import StreamingAnalyzer",
+        "from intentgraph.domain.models import Language",
+        "from pathlib import Path",
+        "import json",
+        "import subprocess"
+      ],
+      "dependencies": [],
+      "symbols_count": 23
+    },
+    {
+      "id": "ca537b79-8f91-4f32-be98-e28c3bb992a7",
+      "path": "examples/clustering/cluster_mode_comparison.py",
+      "language": "python",
+      "lines_of_code": 203,
+      "complexity_score": 25,
+      "maintainability_index": null,
+      "imports": [
+        "from pathlib import Path",
+        "from typing import Dict, List, Any",
+        "import json",
+        "import shutil",
+        "import subprocess",
+        "import sys"
+      ],
+      "dependencies": [],
+      "symbols_count": 25
+    },
+    {
+      "id": "7c268239-bac0-4038-b152-c3189b06b1d1",
+      "path": "examples/clustering/large_codebase_navigation.py",
+      "language": "python",
+      "lines_of_code": 145,
+      "complexity_score": 21,
+      "maintainability_index": 25.23,
+      "imports": [
+        "from pathlib import Path",
+        "from typing import Dict, List, Any",
+        "import json",
+        "import subprocess",
+        "import sys"
+      ],
+      "dependencies": [],
+      "symbols_count": 20
+    },
+    {
+      "id": "32abeddc-8336-414f-8d17-5f95be2bcaf9",
+      "path": "fixtures/javascript/sample_classes.js",
+      "language": "javascript",
+      "lines_of_code": 31,
+      "complexity_score": 0,
+      "maintainability_index": null,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 2
+    },
+    {
+      "id": "83cdef5d-5b07-463a-8a47-58f937a7ac15",
+      "path": "fixtures/javascript/sample_es6.js",
+      "language": "javascript",
+      "lines_of_code": 30,
+      "complexity_score": 0,
+      "maintainability_index": null,
+      "imports": [
+        "import ... from './api'",
+        "import ... from './config'",
+        "import ... from './logger'"
+      ],
+      "dependencies": [],
+      "symbols_count": 3
+    },
+    {
+      "id": "0f819491-820b-447a-a660-91ea5b258f97",
+      "path": "fixtures/javascript/sample_functions.js",
+      "language": "javascript",
+      "lines_of_code": 36,
+      "complexity_score": 0,
+      "maintainability_index": null,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 3
+    },
+    {
+      "id": "b58e50e8-3a95-42dc-af9f-7368cfcdaf54",
+      "path": "fixtures/javascript/sample_module.js",
+      "language": "javascript",
+      "lines_of_code": 25,
+      "complexity_score": 0,
+      "maintainability_index": null,
+      "imports": [
+        "require('./helper')",
+        "require('./utils')"
+      ],
+      "dependencies": [],
+      "symbols_count": 3
+    },
+    {
+      "id": "e493e3c0-72fa-4c06-8bf5-c2854a05b9a0",
+      "path": "fixtures/typescript/sample_class.ts",
+      "language": "typescript",
+      "lines_of_code": 37,
+      "complexity_score": 10,
+      "maintainability_index": null,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 10
+    },
+    {
+      "id": "b6625b53-fed7-4a77-b7ba-d73bbb3ab8fd",
+      "path": "fixtures/typescript/sample_exports.ts",
+      "language": "typescript",
+      "lines_of_code": 23,
+      "complexity_score": 4,
+      "maintainability_index": null,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 5
+    },
+    {
+      "id": "dfe7a95b-2a33-4b05-a292-501a8c91618d",
+      "path": "fixtures/typescript/sample_imports.ts",
+      "language": "typescript",
+      "lines_of_code": 24,
+      "complexity_score": 7,
+      "maintainability_index": null,
+      "imports": [
+        "import ... from './sample_class'",
+        "import ... from './sample_exports'",
+        "import ... from './sample_interface'"
+      ],
+      "dependencies": [
+        "e493e3c0-72fa-4c06-8bf5-c2854a05b9a0",
+        "52c55996-e489-415f-9dcb-a12295b25766",
+        "b6625b53-fed7-4a77-b7ba-d73bbb3ab8fd",
+        "e493e3c0-72fa-4c06-8bf5-c2854a05b9a0",
+        "52c55996-e489-415f-9dcb-a12295b25766",
+        "b6625b53-fed7-4a77-b7ba-d73bbb3ab8fd"
+      ],
+      "symbols_count": 6
+    },
+    {
+      "id": "52c55996-e489-415f-9dcb-a12295b25766",
+      "path": "fixtures/typescript/sample_interface.ts",
+      "language": "typescript",
+      "lines_of_code": 25,
+      "complexity_score": 0,
+      "maintainability_index": null,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 7
+    },
+    {
+      "id": "0218246d-c346-4980-8a57-41a29e775d24",
+      "path": "setup.py",
+      "language": "python",
+      "lines_of_code": 4,
+      "complexity_score": 2,
+      "maintainability_index": 159.45,
+      "imports": [
+        "from setuptools import setup"
+      ],
+      "dependencies": [],
+      "symbols_count": 0
+    },
+    {
+      "id": "2a26d0aa-d719-4735-9f99-4e58fbaf3666",
+      "path": "src/intentgraph/__init__.py",
+      "language": "python",
+      "lines_of_code": 45,
+      "complexity_score": 2,
+      "maintainability_index": 148.87,
+      "imports": [
+        "from .ai import connect_to_codebase, CodebaseAgent, get_capabilities_manifest",
+        "from .application.analyzer import RepositoryAnalyzer",
+        "from .domain.models import AnalysisResult, FileInfo, Language, LanguageSummary"
+      ],
+      "dependencies": [
+        "f293b5ad-13c5-48d7-8fef-328b43fb4148",
+        "d3e24bf6-8d89-4c2e-bc1d-e496f9af69a5",
+        "4ba8fc99-d9c3-4ee0-801b-59816d9ed7dc"
+      ],
+      "symbols_count": 8
+    },
+    {
+      "id": "5b4d2ca6-fa81-411e-bfba-c5c4cdf387d6",
+      "path": "src/intentgraph/adapters/__init__.py",
+      "language": "python",
+      "lines_of_code": 1,
+      "complexity_score": 1,
+      "maintainability_index": 165.57,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 0
+    },
+    {
+      "id": "64c196e9-9d77-44a8-a901-ae7e4e3e4f33",
+      "path": "src/intentgraph/adapters/file_repository.py",
+      "language": "python",
+      "lines_of_code": 178,
+      "complexity_score": 17,
+      "maintainability_index": 40.51,
+      "imports": [
+        "from abc import ABC, abstractmethod",
+        "from pathlib import Path",
+        "from typing import Dict, Optional",
+        "import hashlib",
+        "import os"
+      ],
+      "dependencies": [],
+      "symbols_count": 50
+    },
+    {
+      "id": "8177bdf1-23f5-4d34-9244-c4903917ac6c",
+      "path": "src/intentgraph/adapters/git.py",
+      "language": "python",
+      "lines_of_code": 93,
+      "complexity_score": 17,
+      "maintainability_index": 58.91,
+      "imports": [
+        "from git import Repo",
+        "from pathlib import Path",
+        "import logging",
+        "import pathspec"
+      ],
+      "dependencies": [],
+      "symbols_count": 14
+    },
+    {
+      "id": "8482fb6f-96d4-4ad7-88ab-cf5ae75ddf39",
+      "path": "src/intentgraph/adapters/output.py",
+      "language": "python",
+      "lines_of_code": 94,
+      "complexity_score": 21,
+      "maintainability_index": 38.57,
+      "imports": [
+        "from ..domain.models import AnalysisResult",
+        "from pathlib import Path",
+        "from types import MappingProxyType",
+        "from typing import Any",
+        "from uuid import UUID",
+        "import json",
+        "import jsonschema",
+        "import logging",
+        "import orjson"
+      ],
+      "dependencies": [],
+      "symbols_count": 14
+    },
+    {
+      "id": "b1041268-1261-41be-ba0f-afbf460cdd6e",
+      "path": "src/intentgraph/adapters/parsers/__init__.py",
+      "language": "python",
+      "lines_of_code": 39,
+      "complexity_score": 4,
+      "maintainability_index": 140.31,
+      "imports": [
+        "from ...domain.models import Language",
+        "from .base import LanguageParser",
+        "from .go_parser import GoParser",
+        "from .javascript_parser import JavaScriptParser",
+        "from .python_parser import PythonParser",
+        "from .typescript_parser import TypeScriptParser",
+        "from typing import Optional",
+        "import logging"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc",
+        "a8054ba3-6a85-4df0-8ca7-b59bd21be489",
+        "7a33c527-ec90-477e-8b32-d51e30a58f60",
+        "7ee4f1cb-a919-4896-befe-ef0d8bb1e597",
+        "c68cc6b0-1e67-4e4e-aacb-f112ebcbc099"
+      ],
+      "symbols_count": 7
+    },
+    {
+      "id": "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc",
+      "path": "src/intentgraph/adapters/parsers/base.py",
+      "language": "python",
+      "lines_of_code": 93,
+      "complexity_score": 19,
+      "maintainability_index": 47.13,
+      "imports": [
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from abc import ABC, abstractmethod",
+        "from pathlib import Path",
+        "from typing import Optional"
+      ],
+      "dependencies": [],
+      "symbols_count": 20
+    },
+    {
+      "id": "383bb72f-0ea9-4468-9df5-78f34074cf07",
+      "path": "src/intentgraph/adapters/parsers/enhanced_python_parser.py",
+      "language": "python",
+      "lines_of_code": 483,
+      "complexity_score": 80,
+      "maintainability_index": null,
+      "imports": [
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from .base import LanguageParser",
+        "from pathlib import Path",
+        "from typing import Optional, Any",
+        "from uuid import uuid4",
+        "import ast",
+        "import logging"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc"
+      ],
+      "symbols_count": 127
+    },
+    {
+      "id": "a8054ba3-6a85-4df0-8ca7-b59bd21be489",
+      "path": "src/intentgraph/adapters/parsers/go_parser.py",
+      "language": "python",
+      "lines_of_code": 106,
+      "complexity_score": 24,
+      "maintainability_index": 18.6,
+      "imports": [
+        "from .base import LanguageParser",
+        "from pathlib import Path",
+        "import json",
+        "import logging",
+        "import os",
+        "import subprocess"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc"
+      ],
+      "symbols_count": 29
+    },
+    {
+      "id": "7a33c527-ec90-477e-8b32-d51e30a58f60",
+      "path": "src/intentgraph/adapters/parsers/javascript_parser.py",
+      "language": "python",
+      "lines_of_code": 311,
+      "complexity_score": 50,
+      "maintainability_index": null,
+      "imports": [
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from .base import LanguageParser",
+        "from pathlib import Path",
+        "from tree_sitter import QueryCursor, Query",
+        "from tree_sitter_language_pack import get_language, get_parser",
+        "from typing import Optional, Any",
+        "from uuid import UUID",
+        "import hashlib",
+        "import logging"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc"
+      ],
+      "symbols_count": 105
+    },
+    {
+      "id": "7ee4f1cb-a919-4896-befe-ef0d8bb1e597",
+      "path": "src/intentgraph/adapters/parsers/python_parser.py",
+      "language": "python",
+      "lines_of_code": 77,
+      "complexity_score": 19,
+      "maintainability_index": 51.96,
+      "imports": [
+        "from .base import LanguageParser",
+        "from pathlib import Path",
+        "import ast",
+        "import grimp",
+        "import logging"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc"
+      ],
+      "symbols_count": 27
+    },
+    {
+      "id": "c68cc6b0-1e67-4e4e-aacb-f112ebcbc099",
+      "path": "src/intentgraph/adapters/parsers/typescript_parser.py",
+      "language": "python",
+      "lines_of_code": 387,
+      "complexity_score": 68,
+      "maintainability_index": null,
+      "imports": [
+        "from ...domain.models import CodeSymbol, APIExport, FunctionDependency",
+        "from .base import LanguageParser",
+        "from pathlib import Path",
+        "from tree_sitter import Query",
+        "from tree_sitter import QueryCursor",
+        "from tree_sitter_language_pack import get_language, get_parser",
+        "from typing import Optional, Any",
+        "from uuid import UUID, uuid4",
+        "import hashlib",
+        "import logging"
+      ],
+      "dependencies": [
+        "d653ed05-dc0a-43d2-a627-cb1bb9b0e9dc"
+      ],
+      "symbols_count": 115
+    },
+    {
+      "id": "d3e24bf6-8d89-4c2e-bc1d-e496f9af69a5",
+      "path": "src/intentgraph/ai/__init__.py",
+      "language": "python",
+      "lines_of_code": 42,
+      "complexity_score": 2,
+      "maintainability_index": 150.71,
+      "imports": [
+        "from .agent import CodebaseAgent",
+        "from .manifest import get_capabilities_manifest",
+        "from .navigation import AutonomousNavigator",
+        "from .query import SemanticQuery, QueryBuilder",
+        "from .response import ResponseOptimizer, TokenBudget"
+      ],
+      "dependencies": [
+        "0c22e338-174d-49d1-9405-57d5d7701344",
+        "81483bc0-b1d8-4eff-9fc2-2ccebd139f8b",
+        "dbb186e4-c645-47b9-86db-669f4e54b022",
+        "35b2625a-eb42-4106-ad9b-927cbd62f913",
+        "ad794441-d985-481d-a9a6-22fbd89805ae"
+      ],
+      "symbols_count": 2
+    },
+    {
+      "id": "0c22e338-174d-49d1-9405-57d5d7701344",
+      "path": "src/intentgraph/ai/agent.py",
+      "language": "python",
+      "lines_of_code": 209,
+      "complexity_score": 13,
+      "maintainability_index": 53.26,
+      "imports": [
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..application.clustering import ClusteringEngine",
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel",
+        "from .manifest import get_capabilities_manifest",
+        "from .navigation import AutonomousNavigator",
+        "from .query import QueryBuilder, SemanticQuery",
+        "from .response import ResponseOptimizer, TokenBudget",
+        "from dataclasses import dataclass",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from typing import Dict, List, Any, Optional, Union",
+        "import json"
+      ],
+      "dependencies": [
+        "81483bc0-b1d8-4eff-9fc2-2ccebd139f8b",
+        "dbb186e4-c645-47b9-86db-669f4e54b022",
+        "35b2625a-eb42-4106-ad9b-927cbd62f913",
+        "ad794441-d985-481d-a9a6-22fbd89805ae"
+      ],
+      "symbols_count": 42
+    },
+    {
+      "id": "81483bc0-b1d8-4eff-9fc2-2ccebd139f8b",
+      "path": "src/intentgraph/ai/manifest.py",
+      "language": "python",
+      "lines_of_code": 267,
+      "complexity_score": 12,
+      "maintainability_index": 45.12,
+      "imports": [
+        "from ..domain.models import Language",
+        "from datetime import datetime",
+        "from typing import Dict, Any, List",
+        "import json"
+      ],
+      "dependencies": [],
+      "symbols_count": 11
+    },
+    {
+      "id": "ad794441-d985-481d-a9a6-22fbd89805ae",
+      "path": "src/intentgraph/ai/navigation.py",
+      "language": "python",
+      "lines_of_code": 454,
+      "complexity_score": 72,
+      "maintainability_index": null,
+      "imports": [
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..application.clustering import ClusteringEngine",
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel",
+        "from ..domain.models import Language, AnalysisResult",
+        "from .query import SemanticQuery, QueryType",
+        "from dataclasses import dataclass",
+        "from pathlib import Path",
+        "from typing import Dict, Any, List, Optional, Union, Tuple",
+        "import json"
+      ],
+      "dependencies": [
+        "dbb186e4-c645-47b9-86db-669f4e54b022"
+      ],
+      "symbols_count": 80
+    },
+    {
+      "id": "dbb186e4-c645-47b9-86db-669f4e54b022",
+      "path": "src/intentgraph/ai/query.py",
+      "language": "python",
+      "lines_of_code": 255,
+      "complexity_score": 18,
+      "maintainability_index": 15.53,
+      "imports": [
+        "from dataclasses import dataclass, field",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from typing import Dict, Any, List, Optional, Union",
+        "import re"
+      ],
+      "dependencies": [],
+      "symbols_count": 42
+    },
+    {
+      "id": "35b2625a-eb42-4106-ad9b-927cbd62f913",
+      "path": "src/intentgraph/ai/response.py",
+      "language": "python",
+      "lines_of_code": 373,
+      "complexity_score": 43,
+      "maintainability_index": null,
+      "imports": [
+        "from dataclasses import dataclass",
+        "from enum import Enum",
+        "from typing import Dict, Any, List, Optional, Union",
+        "import json",
+        "import re"
+      ],
+      "dependencies": [],
+      "symbols_count": 54
+    },
+    {
+      "id": "6d973b8e-54b0-4b38-a468-a11ce346e073",
+      "path": "src/intentgraph/application/__init__.py",
+      "language": "python",
+      "lines_of_code": 1,
+      "complexity_score": 1,
+      "maintainability_index": 165.57,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 0
+    },
+    {
+      "id": "4ba8fc99-d9c3-4ee0-801b-59816d9ed7dc",
+      "path": "src/intentgraph/application/analyzer.py",
+      "language": "python",
+      "lines_of_code": 78,
+      "complexity_score": 7,
+      "maintainability_index": 115.97,
+      "imports": [
+        "from ..adapters.file_repository import FileRepository, FileSystemRepository",
+        "from ..adapters.parsers import get_parser_for_language",
+        "from ..adapters.parsers.base import LanguageParser",
+        "from ..domain.exceptions import InvalidRepositoryError",
+        "from ..domain.models import AnalysisResult, Language",
+        "from .services import FileDiscoveryService, CodeAnalysisService, DependencyGraphService, LanguageSummaryService",
+        "from abc import ABC, abstractmethod",
+        "from concurrent.futures import ProcessPoolExecutor, as_completed",
+        "from multiprocessing import cpu_count",
+        "from pathlib import Path",
+        "import logging"
+      ],
+      "dependencies": [
+        "cb0d6b14-cba9-4efc-bb29-6b3a4fb2e2ce"
+      ],
+      "symbols_count": 14
+    },
+    {
+      "id": "3b3c06e8-7a34-4076-b800-c79175aba92e",
+      "path": "src/intentgraph/application/clustering.py",
+      "language": "python",
+      "lines_of_code": 373,
+      "complexity_score": 74,
+      "maintainability_index": null,
+      "imports": [
+        "from ..domain.clustering import ClusterConfig, ClusterMode, IndexLevel, ClusterFile, ClusterMetadata, ClusterSummary, CrossClusterDependency, ClusterIndex, ClusterResult",
+        "from ..domain.models import AnalysisResult, FileInfo",
+        "from collections import defaultdict",
+        "from pathlib import Path",
+        "from typing import Dict, List, Set, Tuple, Optional",
+        "from uuid import uuid4",
+        "import json"
+      ],
+      "dependencies": [],
+      "symbols_count": 90
+    },
+    {
+      "id": "cb0d6b14-cba9-4efc-bb29-6b3a4fb2e2ce",
+      "path": "src/intentgraph/application/services.py",
+      "language": "python",
+      "lines_of_code": 243,
+      "complexity_score": 62,
+      "maintainability_index": null,
+      "imports": [
+        "from ..adapters.git import GitIgnoreHandler",
+        "from ..adapters.parsers import get_parser_for_language",
+        "from ..adapters.parsers.enhanced_python_parser import EnhancedPythonParser",
+        "from ..adapters.parsers.javascript_parser import JavaScriptParser",
+        "from ..adapters.parsers.typescript_parser import TypeScriptParser",
+        "from ..domain.exceptions import InvalidRepositoryError",
+        "from ..domain.graph import DependencyGraph",
+        "from ..domain.models import AnalysisResult, FileInfo, Language, LanguageSummary",
+        "from pathlib import Path",
+        "from typing import Optional",
+        "import logging"
+      ],
+      "dependencies": [],
+      "symbols_count": 48
+    },
+    {
+      "id": "17657b20-a7f6-409d-a9ae-75d266ef8d11",
+      "path": "src/intentgraph/application/streaming_analyzer.py",
+      "language": "python",
+      "lines_of_code": 79,
+      "complexity_score": 11,
+      "maintainability_index": 92.87,
+      "imports": [
+        "from ..domain.models import FileInfo, AnalysisResult, Language",
+        "from .analyzer import RepositoryAnalyzer",
+        "from pathlib import Path",
+        "from typing import Iterator, List",
+        "import logging"
+      ],
+      "dependencies": [
+        "4ba8fc99-d9c3-4ee0-801b-59816d9ed7dc"
+      ],
+      "symbols_count": 24
+    },
+    {
+      "id": "b1253ad4-0533-4d4e-af09-953d40ab3a65",
+      "path": "src/intentgraph/cli.py",
+      "language": "python",
+      "lines_of_code": 339,
+      "complexity_score": 37,
+      "maintainability_index": null,
+      "imports": [
+        "from .application.analyzer import RepositoryAnalyzer",
+        "from .application.clustering import ClusteringEngine",
+        "from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel",
+        "from .domain.exceptions import CyclicDependencyError, IntentGraphError",
+        "from .domain.models import Language, AnalysisResult, FileInfo",
+        "from pathlib import Path",
+        "from rich.console import Console",
+        "from rich.logging import RichHandler",
+        "from rich.progress import Progress, SpinnerColumn, TextColumn",
+        "from rich.table import Table",
+        "import click",
+        "import json",
+        "import logging",
+        "import re",
+        "import sys",
+        "import typer",
+        "import unicodedata"
+      ],
+      "dependencies": [
+        "4ba8fc99-d9c3-4ee0-801b-59816d9ed7dc",
+        "3b3c06e8-7a34-4076-b800-c79175aba92e",
+        "b34ccd7c-1de6-4f66-859c-124c277d302d",
+        "f293b5ad-13c5-48d7-8fef-328b43fb4148",
+        "9786016b-ee35-4768-b496-25d22996f163"
+      ],
+      "symbols_count": 45
+    },
+    {
+      "id": "fe4a65ff-0a63-42c3-9613-ea2fec33b05a",
+      "path": "src/intentgraph/domain/__init__.py",
+      "language": "python",
+      "lines_of_code": 1,
+      "complexity_score": 1,
+      "maintainability_index": 165.57,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 0
+    },
+    {
+      "id": "9786016b-ee35-4768-b496-25d22996f163",
+      "path": "src/intentgraph/domain/clustering.py",
+      "language": "python",
+      "lines_of_code": 94,
+      "complexity_score": 1,
+      "maintainability_index": 143.72,
+      "imports": [
+        "from dataclasses import dataclass, field",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from pydantic import BaseModel, Field",
+        "from typing import Optional, Dict, List",
+        "from uuid import UUID, uuid4"
+      ],
+      "dependencies": [],
+      "symbols_count": 18
+    },
+    {
+      "id": "b34ccd7c-1de6-4f66-859c-124c277d302d",
+      "path": "src/intentgraph/domain/exceptions.py",
+      "language": "python",
+      "lines_of_code": 14,
+      "complexity_score": 1,
+      "maintainability_index": 162.58,
+      "imports": [],
+      "dependencies": [],
+      "symbols_count": 6
+    },
+    {
+      "id": "4cf7f725-964c-4a7e-a49f-b4585207dc12",
+      "path": "src/intentgraph/domain/graph.py",
+      "language": "python",
+      "lines_of_code": 50,
+      "complexity_score": 5,
+      "maintainability_index": 133.27,
+      "imports": [
+        "from .models import FileInfo",
+        "from uuid import UUID",
+        "import networkx"
+      ],
+      "dependencies": [
+        "f293b5ad-13c5-48d7-8fef-328b43fb4148"
+      ],
+      "symbols_count": 12
+    },
+    {
+      "id": "f293b5ad-13c5-48d7-8fef-328b43fb4148",
+      "path": "src/intentgraph/domain/models.py",
+      "language": "python",
+      "lines_of_code": 146,
+      "complexity_score": 4,
+      "maintainability_index": 115.93,
+      "imports": [
+        "from dataclasses import dataclass, field",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from pydantic import BaseModel, Field, validator",
+        "from typing import Optional, Any",
+        "from uuid import UUID, uuid4",
+        "import hashlib"
+      ],
+      "dependencies": [],
+      "symbols_count": 26
+    },
+    {
+      "id": "fd82137b-5518-4dab-9923-214d7b33b50e",
+      "path": "src/intentgraph/snapshot/__init__.py",
+      "language": "python",
+      "lines_of_code": 31,
+      "complexity_score": 1,
+      "maintainability_index": 158.67,
+      "imports": [
+        "from .builder import RepoSnapshotBuilder",
+        "from .models import FileEntry, LanguageInfo, PackageManager, RepoSnapshot, RuntimeSnapshot, StructureSnapshot, ToolingInfo, WorkspaceType"
+      ],
+      "dependencies": [
+        "e861682b-cdd6-4ca6-84ec-84683de8d6d6",
+        "0720c8ce-8801-47f5-8dca-73a988d17cfa"
+      ],
+      "symbols_count": 1
+    },
+    {
+      "id": "e861682b-cdd6-4ca6-84ec-84683de8d6d6",
+      "path": "src/intentgraph/snapshot/builder.py",
+      "language": "python",
+      "lines_of_code": 152,
+      "complexity_score": 4,
+      "maintainability_index": 111.1,
+      "imports": [
+        "from ..application.analyzer import RepositoryAnalyzer",
+        "from ..domain.models import AnalysisResult",
+        "from .models import FileEntry, LanguageInfo, RepoSnapshot, RuntimeSnapshot, StructureSnapshot",
+        "from .runtime import RuntimeDetector",
+        "from datetime import datetime",
+        "from pathlib import Path",
+        "from uuid import UUID, uuid4",
+        "import hashlib"
+      ],
+      "dependencies": [
+        "0720c8ce-8801-47f5-8dca-73a988d17cfa",
+        "47f9cff6-5d07-49f4-90e6-06dbe510f4ee"
+      ],
+      "symbols_count": 22
+    },
+    {
+      "id": "0720c8ce-8801-47f5-8dca-73a988d17cfa",
+      "path": "src/intentgraph/snapshot/models.py",
+      "language": "python",
+      "lines_of_code": 143,
+      "complexity_score": 1,
+      "maintainability_index": 132.68,
+      "imports": [
+        "from collections.abc import Callable",
+        "from datetime import datetime",
+        "from enum import Enum",
+        "from pathlib import Path",
+        "from pydantic import BaseModel, Field",
+        "from typing import Any",
+        "from uuid import UUID"
+      ],
+      "dependencies": [],
+      "symbols_count": 32
+    },
+    {
+      "id": "47f9cff6-5d07-49f4-90e6-06dbe510f4ee",
+      "path": "src/intentgraph/snapshot/runtime.py",
+      "language": "python",
+      "lines_of_code": 247,
+      "complexity_score": 75,
+      "maintainability_index": null,
+      "imports": [
+        "from .models import PackageManager, ToolingInfo, WorkspaceType",
+        "from pathlib import Path",
+        "import json",
+        "import tomllib"
+      ],
+      "dependencies": [
+        "0720c8ce-8801-47f5-8dca-73a988d17cfa"
+      ],
+      "symbols_count": 39
+    }
+  ]
+}

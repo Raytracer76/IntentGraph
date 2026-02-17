@@ -1,0 +1,7 @@
+[project]
+name = "malformed-fixture"
+# Intentionally malformed: missing closing quote
+version = "0.1.0
+
+[tool.pytest.ini_options]
+testpaths = ["tests

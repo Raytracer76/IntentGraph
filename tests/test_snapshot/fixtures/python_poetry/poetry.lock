@@ -1,0 +1,4 @@
+# This is a minimal poetry.lock stub
+[[package]]
+name = "pytest"
+version = "7.4.0"
