@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import re
 from collections import deque
-from typing import Optional
 from uuid import UUID
 
 from intentgraph.domain.models import AnalysisResult, CodeSymbol, FileInfo
@@ -55,7 +54,7 @@ class QueryEngine:
     # Query methods
     # ------------------------------------------------------------------
 
-    def callers(self, symbol_name: str) -> dict:
+    def callers(self, symbol_name: str) -> dict[str, object]:
         """Return all FunctionDependency records whose target symbol matches symbol_name.
 
         Note: callers() resolves symbol names via the UUID-based symbol index.
@@ -81,7 +80,7 @@ class QueryEngine:
 
         return {"symbol": symbol_name, "callers": callers_list}
 
-    def dependents(self, file_path: str) -> dict:
+    def dependents(self, file_path: str) -> dict[str, object]:
         """Return files that declare file_path as a dependency."""
         fi = self._file_by_path.get(file_path)
         if fi is None:
@@ -99,7 +98,7 @@ class QueryEngine:
 
         return {"file": file_path, "dependents": result_list}
 
-    def deps(self, file_path: str) -> dict:
+    def deps(self, file_path: str) -> dict[str, object]:
         """Return files that file_path declares as dependencies."""
         fi = self._file_by_path.get(file_path)
         if fi is None:
@@ -116,7 +115,7 @@ class QueryEngine:
 
         return {"file": file_path, "deps": result_list}
 
-    def context(self, file_path: str) -> dict:
+    def context(self, file_path: str) -> dict[str, object]:
         """Return full context dict for a file."""
         fi = self._file_by_path.get(file_path)
         if fi is None:
@@ -143,11 +142,11 @@ class QueryEngine:
 
     def search(
         self,
-        name_pattern: Optional[str] = None,
-        complexity_gt: Optional[int] = None,
-        lang: Optional[str] = None,
-        has_symbol: Optional[str] = None,
-    ) -> dict:
+        name_pattern: str | None = None,
+        complexity_gt: int | None = None,
+        lang: str | None = None,
+        has_symbol: str | None = None,
+    ) -> dict[str, object]:
         """Search files by optional filters; all active filters are ANDed."""
         query_echo = {
             "name_pattern": name_pattern,
@@ -176,7 +175,7 @@ class QueryEngine:
 
         return {"query": query_echo, "results": results}
 
-    def path(self, file_a: str, file_b: str) -> dict:
+    def path(self, file_a: str, file_b: str) -> dict[str, object]:
         """Compute shortest directed dependency path from file_a to file_b via BFS."""
         if file_a == file_b:
             return {
@@ -192,32 +191,38 @@ class QueryEngine:
             return {"from": file_a, "to": file_b, "path": [], "found": False}
 
         # BFS over forward dependency graph: fi -> fi.dependencies
-        # predecessor map: UUID -> UUID (how we reached this node)
-        predecessors: dict[UUID, Optional[UUID]] = {fi_a.id: None}
+        # predecessor map: UUID -> UUID | None (how we reached this node)
+        predecessors: dict[UUID, UUID | None] = {fi_a.id: None}
         queue: deque[UUID] = deque([fi_a.id])
+        found = False
 
-        while queue:
+        while queue and not found:
             current_id = queue.popleft()
             current_fi = self._file_by_id[current_id]
             for dep_id in current_fi.dependencies:
+                if dep_id not in self._file_by_id:  # guard first
+                    continue
                 if dep_id not in predecessors:
                     predecessors[dep_id] = current_id
-                    if dep_id == fi_b.id:
-                        # Reconstruct path
-                        path_ids = []
-                        node = dep_id
-                        while node is not None:
-                            path_ids.append(node)
-                            node = predecessors[node]
-                        path_ids.reverse()
-                        path_strs = [str(self._file_by_id[n].path) for n in path_ids]
-                        return {"from": file_a, "to": file_b, "path": path_strs, "found": True}
-                    if dep_id in self._file_by_id:
-                        queue.append(dep_id)
+                    if dep_id == fi_b.id:  # early exit second
+                        found = True
+                        break
+                    queue.append(dep_id)
+
+        if found:
+            # Reconstruct path
+            path_ids = []
+            node: UUID | None = fi_b.id
+            while node is not None:
+                path_ids.append(node)
+                node = predecessors[node]
+            path_ids.reverse()
+            path_strs = [str(self._file_by_id[n].path) for n in path_ids]
+            return {"from": file_a, "to": file_b, "path": path_strs, "found": True}
 
         return {"from": file_a, "to": file_b, "path": [], "found": False}
 
-    def symbols(self, file_path: str) -> dict:
+    def symbols(self, file_path: str) -> dict[str, object]:
         """Return all symbols for a file."""
         fi = self._file_by_path.get(file_path)
         if fi is None:
@@ -233,7 +238,7 @@ class QueryEngine:
 # Private helpers
 # ------------------------------------------------------------------
 
-def _symbol_to_dict(sym: CodeSymbol) -> dict:
+def _symbol_to_dict(sym: CodeSymbol) -> dict[str, object]:
     return {
         "name": sym.name,
         "type": sym.symbol_type,
@@ -245,25 +250,25 @@ def _symbol_to_dict(sym: CodeSymbol) -> dict:
     }
 
 
-def _passes_name_pattern(fi: FileInfo, name_pattern: Optional[str]) -> bool:
+def _passes_name_pattern(fi: FileInfo, name_pattern: str | None) -> bool:
     if name_pattern is None:
         return True
     return bool(re.search(name_pattern, str(fi.path)))
 
 
-def _passes_lang(fi: FileInfo, lang: Optional[str]) -> bool:
+def _passes_lang(fi: FileInfo, lang: str | None) -> bool:
     if lang is None:
         return True
     return fi.language.value.lower() == lang.lower()
 
 
-def _passes_has_symbol(fi: FileInfo, has_symbol: Optional[str]) -> bool:
+def _passes_has_symbol(fi: FileInfo, has_symbol: str | None) -> bool:
     if has_symbol is None:
         return True
     return any(sym.name == has_symbol for sym in fi.symbols)
 
 
-def _passes_complexity(fi: FileInfo, complexity_gt: Optional[int]) -> bool:
+def _passes_complexity(fi: FileInfo, complexity_gt: int | None) -> bool:
     """Filter by complexity.
 
     Complexity is read from FileInfo.complexity_score.

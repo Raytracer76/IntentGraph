@@ -23,7 +23,7 @@ from intentgraph.query_engine import QueryEngine
 # ---------------------------------------------------------------------------
 
 def _make_symbol(name: str, symbol_type: str = "function", line_start: int = 1,
-                 line_end: int = 5, signature: str = None,
+                 line_end: int = 5, signature: str | None = None,
                  is_exported: bool = False, is_private: bool = False) -> CodeSymbol:
     return CodeSymbol(
         name=name,
@@ -422,7 +422,6 @@ class TestSearch:
         # Use complexity_score on FileInfo as proxy (see note in spec)
         sym_hi = _make_symbol("complex_fn")
         # Attach a fake complexity attribute
-        object.__setattr__(sym_hi, 'complexity', 50) if False else None
         # Instead test via a FileInfo with complexity_score
         file_hi = FileInfo(
             path=Path("hi.py"), language=Language.PYTHON,
