@@ -35,7 +35,7 @@ def _make_fake_result(file_count: int = 3) -> MagicMock:
 
 
 class TestQueryCallers:
-    def test_callers_success(self, monkeypatch):
+    def test_callers_success(self):
         fake_result = _make_fake_result()
         expected = {"callers": ["foo.py"]}
 
@@ -47,7 +47,7 @@ class TestQueryCallers:
         data = json.loads(result.stdout)
         assert data == expected
 
-    def test_callers_engine_error(self, monkeypatch):
+    def test_callers_engine_error(self):
         fake_result = _make_fake_result()
 
         with patch("intentgraph.cache.CacheManager.load_or_analyze", return_value=fake_result):
@@ -178,7 +178,7 @@ class TestQuerySearch:
         expected = {"matches": []}
 
         with patch("intentgraph.cache.CacheManager.load_or_analyze", return_value=fake_result):
-            with patch("intentgraph.query_engine.QueryEngine.search", return_value=expected) as mock_search:
+            with patch("intentgraph.query_engine.QueryEngine.search", return_value=expected):
                 result = runner.invoke(app, ["query", "search", "--complexity-gt", "10"])
 
         assert result.exit_code == 0

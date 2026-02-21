@@ -18,9 +18,11 @@ from rich.table import Table
 # Local imports
 from .application.analyzer import RepositoryAnalyzer
 from .application.clustering import ClusteringEngine
-from .domain.exceptions import CyclicDependencyError, IntentGraphError
-from .domain.models import Language, AnalysisResult, FileInfo
+from .cache import CacheManager
 from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
+from .domain.exceptions import CyclicDependencyError, IntentGraphError
+from .domain.models import AnalysisResult, FileInfo, Language
+from .query_engine import QueryEngine
 
 app = typer.Typer(
     name="intentgraph",
@@ -434,9 +436,6 @@ if __name__ == "__main__":
 # New Typer sub-apps — query and cache
 # ---------------------------------------------------------------------------
 
-from .cache import CacheManager  # noqa: E402
-from .query_engine import QueryEngine  # noqa: E402
-
 query_app = typer.Typer(
     name="query",
     help="Query cached repository analysis.",
@@ -451,7 +450,7 @@ app.add_typer(query_app)
 app.add_typer(cache_app)
 
 
-def _load_engine(repo: Path) -> tuple[object, "AnalysisResult"]:
+def _load_engine(repo: Path) -> tuple[QueryEngine, AnalysisResult]:
     """Load or analyse the repo and return ``(engine, result)``."""
     result = CacheManager(repo).load_or_analyze()
     engine = QueryEngine(result)
