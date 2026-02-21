@@ -117,6 +117,23 @@ class TestSave:
         leftover_temps = [f for f in ig_dir.iterdir() if f.name != "cache.json"]
         assert leftover_temps == []
 
+    def test_save_uses_os_replace_for_atomic_rename(self, manager: CacheManager, result: AnalysisResult) -> None:
+        from unittest.mock import patch
+        import os as os_module
+
+        original_replace = os_module.replace
+        replace_calls: list[tuple[str, str]] = []
+
+        def spy_replace(src: str, dst: str) -> None:
+            replace_calls.append((src, dst))
+            return original_replace(src, dst)
+
+        with patch("intentgraph.cache.os.replace", side_effect=spy_replace):
+            manager.save(result)
+
+        assert len(replace_calls) == 1, "os.replace should be called exactly once"
+        assert Path(replace_calls[0][1]) == manager._cache_path  # noqa: SLF001
+
 
 # ---------------------------------------------------------------------------
 # Atom: load returns fresh result when cache is fresh
