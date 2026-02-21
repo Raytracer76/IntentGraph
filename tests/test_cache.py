@@ -126,7 +126,7 @@ class TestSave:
 
         def spy_replace(src: str, dst: str) -> None:
             replace_calls.append((src, dst))
-            return original_replace(src, dst)
+            original_replace(src, dst)
 
         with patch("intentgraph.cache.os.replace", side_effect=spy_replace):
             manager.save(result)
@@ -328,6 +328,31 @@ class TestLoadOrAnalyze:
         monkeypatch.setattr("intentgraph.cache.RepositoryAnalyzer", lambda: FakeAnalyzer())
         manager.load_or_analyze()
         assert called == []
+
+    def test_load_or_analyze_second_call_uses_cache(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Second call to load_or_analyze() must hit the cache; analyzer called exactly once."""
+        repo = tmp_path
+        fake_result = AnalysisResult(root=repo, files=[])
+        analyze_count: list[int] = [0]
+
+        class FakeAnalyzer:
+            def analyze(self, path: Path) -> AnalysisResult:
+                analyze_count[0] += 1
+                return fake_result
+
+        mgr = CacheManager(repo)
+        monkeypatch.setattr(
+            "intentgraph.cache.RepositoryAnalyzer", lambda: FakeAnalyzer()
+        )
+
+        first = mgr.load_or_analyze()
+        second = mgr.load_or_analyze()
+
+        assert analyze_count[0] == 1, "analyzer must be called exactly once; second call should use the cache"
+        assert first.root == second.root
+        assert first.files == second.files
 
 
 # ---------------------------------------------------------------------------

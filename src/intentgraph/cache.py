@@ -8,7 +8,6 @@ import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Optional
 
 from .application.analyzer import RepositoryAnalyzer
 from .domain.models import AnalysisResult
@@ -36,11 +35,12 @@ class CacheManager:
     # Public API
     # ------------------------------------------------------------------
 
-    def load(self) -> Optional[AnalysisResult]:
+    def load(self) -> AnalysisResult | None:
         """Return the cached :class:`AnalysisResult` if it is fresh, otherwise ``None``.
 
         Returns ``None`` when:
         - the cache file does not exist, or
+        - the schema_version is unknown, or
         - any tracked file has a different SHA-256 digest on disk, or
         - any tracked file no longer exists on disk.
         """
@@ -49,6 +49,8 @@ class CacheManager:
 
         try:
             data = json.loads(self._cache_path.read_text(encoding="utf-8"))
+            if data.get("schema_version") != "1":
+                return None
             result = AnalysisResult.model_validate(data["result"])
         except Exception:
             return None
@@ -101,7 +103,7 @@ class CacheManager:
         except FileNotFoundError:
             pass
 
-    def status(self) -> dict:
+    def status(self) -> dict[str, bool | int | str]:
         """Return a summary dict describing the current cache state.
 
         Returns:
