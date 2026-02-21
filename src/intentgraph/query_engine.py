@@ -56,7 +56,14 @@ class QueryEngine:
     # ------------------------------------------------------------------
 
     def callers(self, symbol_name: str) -> dict:
-        """Return all FunctionDependency records whose target symbol matches symbol_name."""
+        """Return all FunctionDependency records whose target symbol matches symbol_name.
+
+        Note: callers() resolves symbol names via the UUID-based symbol index.
+        FunctionDependency records referencing symbols not present in this
+        AnalysisResult (external/out-of-graph symbols) cannot be found by name
+        and will be silently omitted. This is a constraint of the domain model,
+        not a bug.
+        """
         # Collect target symbol UUIDs for this name
         target_sym_ids: set[UUID] = set()
         for fi, sym in self._symbol_by_name.get(symbol_name, []):
@@ -172,12 +179,11 @@ class QueryEngine:
     def path(self, file_a: str, file_b: str) -> dict:
         """Compute shortest directed dependency path from file_a to file_b via BFS."""
         if file_a == file_b:
-            found = file_a in self._file_by_path
             return {
                 "from": file_a,
                 "to": file_b,
-                "path": [file_a] if found else [],
-                "found": found,
+                "path": [file_a],
+                "found": True,
             }
 
         fi_a = self._file_by_path.get(file_a)

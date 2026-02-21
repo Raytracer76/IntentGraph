@@ -515,6 +515,12 @@ class TestPath:
         assert _is_json_serialisable(result)
 
 
+    def test_path_same_file_not_in_index_still_returns_found_true(self, engine_with_deps):
+        result = engine_with_deps.path("not_in_graph.py", "not_in_graph.py")
+        assert result["found"] is True
+        assert result["path"] == ["not_in_graph.py"]
+
+
 # ---------------------------------------------------------------------------
 # symbols()
 # ---------------------------------------------------------------------------
