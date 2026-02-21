@@ -126,9 +126,12 @@ class CacheManager:
         if exists:
             try:
                 data = json.loads(self._cache_path.read_text(encoding="utf-8"))
-                result = AnalysisResult.model_validate(data["result"])
-                file_count = len(result.files)
-                stale = self._is_stale(result)
+                if data.get("schema_version") != _SCHEMA_VERSION:
+                    stale = True
+                else:
+                    result = AnalysisResult.model_validate(data["result"])
+                    file_count = len(result.files)
+                    stale = self._is_stale(result)
             except Exception:
                 stale = True
 

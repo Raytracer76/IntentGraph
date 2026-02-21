@@ -266,6 +266,17 @@ class TestStatus:
         # When cache does not exist, stale is False (nothing to be stale)
         assert manager.status()["stale"] is False
 
+    def test_status_stale_true_when_unknown_schema_version(
+        self, manager: CacheManager
+    ) -> None:
+        """A cache with an unrecognised schema_version must be reported as stale."""
+        bad_payload = {"schema_version": "99", "result": {"files": [], "root": str(manager._repo_path)}}
+        manager._cache_path.parent.mkdir(parents=True, exist_ok=True)
+        manager._cache_path.write_text(json.dumps(bad_payload), encoding="utf-8")
+        s = manager.status()
+        assert s["exists"] is True
+        assert s["stale"] is True
+
 
 # ---------------------------------------------------------------------------
 # Atom: load_or_analyze
