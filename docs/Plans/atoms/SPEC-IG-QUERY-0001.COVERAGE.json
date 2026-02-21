@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1.0",
+  "spec_id": "SPEC-IG-QUERY-0001",
+  "spec_hash": "fb8919b572876e53ce8bfa58d432e9d14bf881aec31fa86e6e989b5bcb2dd689",
+  "total_normative_units": 63,
+  "captured_atoms": 63,
+  "ambiguous_units": 0,
+  "missed_atoms": 0,
+  "all_captured": true,
+  "capture_ratio_strict": 1.0,
+  "capture_ratio_lenient": 1.0,
+  "config": {}
+}
