@@ -18,9 +18,11 @@ from rich.table import Table
 # Local imports
 from .application.analyzer import RepositoryAnalyzer
 from .application.clustering import ClusteringEngine
-from .domain.exceptions import CyclicDependencyError, IntentGraphError
-from .domain.models import Language, AnalysisResult, FileInfo
+from .cache import CacheManager
 from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
+from .domain.exceptions import CyclicDependencyError, IntentGraphError
+from .domain.models import AnalysisResult, FileInfo, Language
+from .query_engine import QueryEngine
 
 app = typer.Typer(
     name="intentgraph",
@@ -428,3 +430,189 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ---------------------------------------------------------------------------
+# New Typer sub-apps — query and cache
+# ---------------------------------------------------------------------------
+
+query_app = typer.Typer(
+    name="query",
+    help="Query cached repository analysis.",
+    no_args_is_help=True,
+)
+cache_app = typer.Typer(
+    name="cache",
+    help="Manage the analysis cache.",
+    no_args_is_help=True,
+)
+app.add_typer(query_app)
+app.add_typer(cache_app)
+
+
+def _load_engine(repo: Path) -> tuple[QueryEngine, AnalysisResult]:
+    """Load or analyse the repo and return ``(engine, result)``."""
+    result = CacheManager(repo).load_or_analyze()
+    engine = QueryEngine(result)
+    return engine, result
+
+
+# ---------------------------------------------------------------------------
+# query sub-commands
+# ---------------------------------------------------------------------------
+
+
+@query_app.command("callers")
+def query_callers(
+    symbol: str = typer.Argument(..., help="Symbol name to look up callers for."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Return all callers of a symbol."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.callers(symbol)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("dependents")
+def query_dependents(
+    file: str = typer.Argument(..., help="File path to look up dependents for."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Return files that depend on the given file."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.dependents(file)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("deps")
+def query_deps(
+    file: str = typer.Argument(..., help="File path to list dependencies for."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Return direct dependencies of the given file."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.deps(file)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("context")
+def query_context(
+    file: str = typer.Argument(..., help="File path to get context for."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Return full context for the given file."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.context(file)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("search")
+def query_search(
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+    name_matches: str | None = typer.Option(None, "--name-matches", help="Regex pattern for file name."),
+    complexity_gt: int | None = typer.Option(None, "--complexity-gt", help="Minimum complexity score."),
+    lang: str | None = typer.Option(None, "--lang", help="Language filter."),
+    has_symbol: str | None = typer.Option(None, "--has-symbol", help="Symbol that must be present."),
+) -> None:
+    """Search files by criteria. At least one filter option must be provided."""
+    if name_matches is None and complexity_gt is None and lang is None and has_symbol is None:
+        typer.echo(json.dumps({"error": "At least one search option must be provided"}), err=True)
+        raise typer.Exit(1)
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.search(name_matches, complexity_gt, lang, has_symbol)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("path")
+def query_path(
+    file_a: str = typer.Argument(..., help="Source file path."),
+    file_b: str = typer.Argument(..., help="Target file path."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Find the dependency path between two files."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.path(file_a, file_b)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@query_app.command("symbols")
+def query_symbols(
+    file: str = typer.Argument(..., help="File path to list symbols for."),
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Return all symbols defined in the given file."""
+    try:
+        engine, _ = _load_engine(repo)
+        out = engine.symbols(file)
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+# ---------------------------------------------------------------------------
+# cache sub-commands
+# ---------------------------------------------------------------------------
+
+
+@cache_app.command("status")
+def cache_status(
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Show cache status for the repository."""
+    try:
+        out = CacheManager(repo).status()
+        print(json.dumps(out, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@cache_app.command("warm")
+def cache_warm(
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Warm the cache by running analysis if needed."""
+    try:
+        result = CacheManager(repo).load_or_analyze()
+        print(json.dumps({"warmed": True, "file_count": len(result.files)}, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
+
+
+@cache_app.command("clear")
+def cache_clear(
+    repo: Path = typer.Option(Path("."), "--repo", help="Path to the repository."),
+) -> None:
+    """Clear the analysis cache for the repository."""
+    try:
+        CacheManager(repo).clear()
+        print(json.dumps({"cleared": True}, indent=2))
+    except Exception as e:
+        typer.echo(json.dumps({"error": str(e)}), err=True)
+        raise typer.Exit(1)
