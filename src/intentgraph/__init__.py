@@ -1,6 +1,6 @@
 """IntentGraph - AI-Native Codebase Intelligence Platform."""
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 __author__ = "Nicolas Ligas"
 __email__ = "nligas@gmail.com"
 
