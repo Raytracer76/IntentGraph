@@ -1,28 +1,23 @@
 """Command-line interface for IntentGraph."""
 
+from __future__ import annotations
+
 # Standard library imports
 import json
 import re
 import sys
 import unicodedata
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 # Third-party imports
 import click
 import typer
 from rich.console import Console
-from rich.logging import RichHandler
-from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich.table import Table
 
-# Local imports
-from .application.analyzer import RepositoryAnalyzer
-from .application.clustering import ClusteringEngine
-from .cache import CacheManager
-from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
-from .domain.exceptions import CyclicDependencyError, IntentGraphError
-from .domain.models import AnalysisResult, FileInfo, Language
-from .query_engine import QueryEngine
+if TYPE_CHECKING:
+    from .domain.models import AnalysisResult
+    from .query_engine import QueryEngine
 
 app = typer.Typer(
     name="intentgraph",
@@ -224,8 +219,9 @@ def analyze(
 ) -> None:
     """Analyze a Git repository and generate dependency graph."""
 
-    # Setup logging
+    # Setup logging (RichHandler is cheap — rich already loaded for Console)
     import logging
+    from rich.logging import RichHandler
     logging.basicConfig(
         level=logging.DEBUG if debug else logging.INFO,
         format="%(message)s",
@@ -235,6 +231,15 @@ def analyze(
     logger = logging.getLogger(__name__)
 
     try:
+        # Lazy imports — keep startup cost near-zero for --help
+        from rich.progress import Progress, SpinnerColumn, TextColumn
+        from rich.table import Table
+        from .application.analyzer import RepositoryAnalyzer
+        from .application.clustering import ClusteringEngine
+        from .domain.clustering import ClusterConfig, ClusterMode, IndexLevel
+        from .domain.exceptions import CyclicDependencyError, IntentGraphError
+        from .domain.models import Language
+
         # Parse language filter
         lang_filter = None
         if languages:
@@ -452,6 +457,8 @@ app.add_typer(cache_app)
 
 def _load_engine(repo: Path) -> tuple[QueryEngine, AnalysisResult]:
     """Load or analyse the repo and return ``(engine, result)``."""
+    from .cache import CacheManager
+    from .query_engine import QueryEngine
     result = CacheManager(repo).load_or_analyze()
     engine = QueryEngine(result)
     return engine, result
@@ -585,6 +592,7 @@ def cache_status(
 ) -> None:
     """Show cache status for the repository."""
     try:
+        from .cache import CacheManager
         out = CacheManager(repo).status()
         print(json.dumps(out, indent=2))
     except Exception as e:
@@ -598,6 +606,7 @@ def cache_warm(
 ) -> None:
     """Warm the cache by running analysis if needed."""
     try:
+        from .cache import CacheManager
         result = CacheManager(repo).load_or_analyze()
         print(json.dumps({"warmed": True, "file_count": len(result.files)}, indent=2))
     except Exception as e:
@@ -611,6 +620,7 @@ def cache_clear(
 ) -> None:
     """Clear the analysis cache for the repository."""
     try:
+        from .cache import CacheManager
         CacheManager(repo).clear()
         print(json.dumps({"cleared": True}, indent=2))
     except Exception as e:

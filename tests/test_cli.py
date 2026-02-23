@@ -33,7 +33,7 @@ class TestCLI:
         assert "--lang" in result.output
         assert "--include-tests" in result.output
     
-    @patch('intentgraph.cli.RepositoryAnalyzer')
+    @patch('intentgraph.application.analyzer.RepositoryAnalyzer')
     def test_analyze_command_success(self, mock_analyzer, temp_repo):
         """Test successful analysis."""
         # Mock analyzer
@@ -54,7 +54,7 @@ class TestCLI:
         assert result.exit_code == 0
         assert mock_instance.analyze.called
     
-    @patch('intentgraph.cli.RepositoryAnalyzer')
+    @patch('intentgraph.application.analyzer.RepositoryAnalyzer')
     def test_analyze_with_output_file(self, mock_analyzer, temp_repo, tmp_path):
         """Test analysis with output file."""
         # Mock analyzer
@@ -79,7 +79,7 @@ class TestCLI:
         assert result.exit_code == 0
         assert output_file.exists()
     
-    @patch('intentgraph.cli.RepositoryAnalyzer')
+    @patch('intentgraph.application.analyzer.RepositoryAnalyzer')
     def test_analyze_with_cycles_exit_code(self, mock_analyzer, temp_repo):
         """Test analysis with cycles returns exit code 2."""
         # Mock analyzer with cycles
