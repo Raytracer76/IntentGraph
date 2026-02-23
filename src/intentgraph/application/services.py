@@ -1,6 +1,7 @@
 """Refactored services for repository analysis."""
 
 import logging
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -27,27 +28,39 @@ class FileDiscoveryService:
         self._git_handler.load_gitignore(repo_path)
         source_files = []
 
-        for file_path in repo_path.rglob("*"):
-            try:
-                if not file_path.is_file():
+        for dirpath, dirnames, filenames in os.walk(repo_path):
+            current_dir = Path(dirpath)
+
+            # Prune ignored directories in-place — prevents os.walk from
+            # descending into node_modules, dist, .git, etc. entirely.
+            dirnames[:] = [
+                d for d in dirnames
+                if not self._git_handler.is_ignored(current_dir / d, repo_path)
+            ]
+
+            for filename in filenames:
+                file_path = current_dir / filename
+
+                try:
+                    if not file_path.is_file():
+                        continue
+                except (OSError, PermissionError):
                     continue
-            except (OSError, PermissionError):
-                continue
 
-            if self._git_handler.is_ignored(file_path, repo_path):
-                continue
+                if self._git_handler.is_ignored(file_path, repo_path):
+                    continue
 
-            if not self.include_tests and self._is_test_file(file_path):
-                continue
+                if not self.include_tests and self._is_test_file(file_path):
+                    continue
 
-            language = Language.from_extension(file_path.suffix)
-            if language == Language.UNKNOWN:
-                continue
+                language = Language.from_extension(file_path.suffix)
+                if language == Language.UNKNOWN:
+                    continue
 
-            if self.language_filter and language not in self.language_filter:
-                continue
+                if self.language_filter and language not in self.language_filter:
+                    continue
 
-            source_files.append(file_path)
+                source_files.append(file_path)
 
         return source_files
     
