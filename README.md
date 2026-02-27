@@ -4,7 +4,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Static code analysis for Python, JavaScript, and TypeScript — with a machine-queryable cache layer designed for AI agents.
+Static code analysis for Python, JavaScript, TypeScript, and Go — with a machine-queryable cache layer designed for AI agents.
 
 ```bash
 pip install intentgraph
