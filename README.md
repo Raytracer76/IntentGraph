@@ -4,7 +4,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Static code analysis for Python, JavaScript, TypeScript, and Go — with a machine-queryable cache layer designed for AI agents.
+Static code analysis for Python, JavaScript, TypeScript, Go, Java, and Kotlin — with a machine-queryable cache layer designed for AI agents.
 
 ```bash
 pip install intentgraph
@@ -39,7 +39,7 @@ intentgraph [OPTIONS] REPO_PATH
 
 Options:
   --level [minimal|medium|full]          Detail level (default: minimal)
-  --lang TEXT                            Languages: py,js,ts,go
+  --lang TEXT                            Languages: py,js,ts,go,java,kt
   --output FILE                          Write to file instead of stdout
   --include-tests                        Include test files
   --show-cycles                          Print dependency cycles, exit 2
@@ -171,6 +171,10 @@ Snapshot UUIDs are SHA256-derived — deterministic across machines and operatin
 | JavaScript | Full AST — ES6+, classes, CommonJS/ESM, complexity |
 | TypeScript | Full AST — interfaces, generics, decorators, type imports |
 | Go | File-level dependencies |
+| Java | Full AST — symbols, exports, Android-aware package import resolution (requires `pip install tree-sitter-java`) |
+| Kotlin | Full AST — symbols, exports, cross-language dep mapping for mixed Java/Kotlin source sets (requires `pip install tree-sitter-kotlin`) |
+
+Java and Kotlin support was contributed by [@MicheleDaniele](https://github.com/MicheleDaniele) — thank you!
 
 The `ai/` module provides a natural-language query interface and agent context management. Query parsing and intent detection work; deep semantic execution is still evolving — use the structured `query` CLI for reliable agent integration.
 
