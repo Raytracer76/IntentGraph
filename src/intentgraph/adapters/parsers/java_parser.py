@@ -4,13 +4,19 @@ from pathlib import Path
 from typing import Optional
 from uuid import UUID
 
-from tree_sitter import Language as TSLanguage, Parser
-import tree_sitter_java
 try:
-    from tree_sitter import Query, QueryCursor
-except Exception:
-    Query = None
-    QueryCursor = None
+    from tree_sitter import Language as TSLanguage, Parser
+    import tree_sitter_java
+    try:
+        from tree_sitter import Query, QueryCursor
+    except Exception:
+        Query = None
+        QueryCursor = None
+except ImportError as _java_import_err:
+    raise ImportError(
+        "Java parser requires 'tree-sitter-java'. "
+        "Install it with: pip install tree-sitter-java"
+    ) from _java_import_err
 from .base import LanguageParser
 from ...domain.models import CodeSymbol, APIExport
 

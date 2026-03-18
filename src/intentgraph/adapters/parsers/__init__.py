@@ -2,14 +2,22 @@
 
 from typing import Optional
 
-from .java_parser import JavaParser
-from .kotlin_parser import KotlinParser
 from ...domain.models import Language
 from .base import LanguageParser
 from .go_parser import GoParser
 from .javascript_parser import JavaScriptParser
 from .python_parser import PythonParser
 from .typescript_parser import TypeScriptParser
+
+try:
+    from .java_parser import JavaParser as _JavaParser
+except ImportError:
+    _JavaParser = None  # type: ignore[assignment,misc]
+
+try:
+    from .kotlin_parser import KotlinParser as _KotlinParser
+except ImportError:
+    _KotlinParser = None  # type: ignore[assignment,misc]
 
 
 class _ParserRegistry:
@@ -21,9 +29,11 @@ class _ParserRegistry:
             Language.JAVASCRIPT: JavaScriptParser,
             Language.TYPESCRIPT: TypeScriptParser,
             Language.GO: GoParser,
-            Language.JAVA: JavaParser,
-            Language.KOTLIN: KotlinParser
         }
+        if _JavaParser is not None:
+            self._parser_factories[Language.JAVA] = _JavaParser
+        if _KotlinParser is not None:
+            self._parser_factories[Language.KOTLIN] = _KotlinParser
 
     def get_parser(self, language: Language) -> LanguageParser | None:
         # Create parser on first access (lazy initialization)

@@ -4,13 +4,19 @@ from pathlib import Path
 from typing import Optional
 from uuid import UUID
 
-from tree_sitter import Language as TSLanguage, Parser
-import tree_sitter_kotlin
 try:
-    from tree_sitter import Query, QueryCursor
-except Exception:
-    Query = None
-    QueryCursor = None
+    from tree_sitter import Language as TSLanguage, Parser
+    import tree_sitter_kotlin
+    try:
+        from tree_sitter import Query, QueryCursor
+    except Exception:
+        Query = None
+        QueryCursor = None
+except ImportError as _kotlin_import_err:
+    raise ImportError(
+        "Kotlin parser requires 'tree-sitter-kotlin'. "
+        "Install it with: pip install tree-sitter-kotlin"
+    ) from _kotlin_import_err
 from .base import LanguageParser
 from ...domain.models import CodeSymbol, APIExport
 
