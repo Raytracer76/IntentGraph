@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: IntentGraph
+version: 0.5.4
+date-released: 2026-03-22
+authors:
+  - family-names: Ligas
+    given-names: Nicolas
+    alias: Raytracer76
+license: MIT
+repository-code: https://github.com/Raytracer76/IntentGraph
+abstract: >-
+  IntentGraph is a static code analysis CLI tool optimized for AI agent
+  context windows. It analyzes Python, JavaScript, TypeScript, Go, Java,
+  and Kotlin codebases and generates token-efficient structured output
+  designed to fit within AI agent context limitations.
+keywords:
+  - static analysis
+  - code analysis
+  - AI agents
+  - context window
+  - dependency graph
+  - Python
+  - JavaScript
+  - TypeScript
