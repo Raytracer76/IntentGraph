@@ -35,6 +35,8 @@ dependencies = [
     "orjson>=3.9.0,<4.0.0",
     "pydantic>=2.5.0,<3.0.0",
     "gitpython>=3.1.41,<4.0.0",
+    "tree-sitter-java>=0.23.5",
+    "tree-sitter-kotlin>=1.1.0"
 ]
 
 [project.optional-dependencies]

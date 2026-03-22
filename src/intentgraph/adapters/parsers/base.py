@@ -133,3 +133,75 @@ class LanguageParser(ABC):
     def _get_init_files(self) -> list[str]:
         """Get initialization file names for this language."""
         pass
+
+    def _all_imports_from_tree(self, root_node) -> list[str]:
+        """Generic Tree-sitter traversal to collect import declarations.
+
+        Parsers that need language-specific handling can still override this method.
+        This implementation cerca più tipi di nodo comunemente usati.
+        """
+        imports = []
+
+        IMPORT_NODE_TYPES = {
+            "import_declaration", "import_statement", "import", "qualified_import",
+        }
+
+        def text_of(node):
+            # Concatena ricorsivamente il testo dei token figli, decodificando bytes
+            parts = []
+
+            def collect(n):
+                if n is None:
+                    return
+                # Only collect text for leaf nodes/token nodes to avoid joining
+                # large subtrees into a single giant string.
+                children = getattr(n, "children", []) or []
+                if not children:
+                    t = getattr(n, "text", None)
+                    if isinstance(t, (bytes, bytearray)): 
+                        try:
+                            t = t.decode("utf-8", errors="ignore")
+                        except Exception:
+                            t = None
+                    if t:
+                        s = str(t).strip()
+                        # ignore extremely long tokens
+                        if s and len(s) <= 200:
+                            parts.append(s)
+                    return
+                for c in children:
+                    collect(c)
+
+            collect(node)
+            return " ".join(parts).strip()
+
+        def walk(node):
+            if node is None:
+                return
+            try:
+                t = getattr(node, "type", "")
+                if t in IMPORT_NODE_TYPES:
+                    raw = text_of(node)
+                    clean = raw.replace("import", "").replace("static", "").replace(";", "").strip()
+                    if clean:
+                        imports.append(clean)
+                # No generic textual fallback here. Parsers that need language-specific
+                # extraction should override this method or provide their own fallbacks.
+            except Exception:
+                # difensivo: non vuole rompere l'intera scansione
+                pass
+
+            for child in getattr(node, "children", []) or []:
+                walk(child)
+
+        walk(root_node)
+        # dedup mantenendo ordine
+        seen = set()
+        out = []
+        for i in imports:
+            if i not in seen:
+                seen.add(i)
+                out.append(i)
+        return out
+
+

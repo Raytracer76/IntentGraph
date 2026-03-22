@@ -2,6 +2,8 @@
 
 from typing import Optional
 
+from .java_parser import JavaParser
+from .kotlin_parser import KotlinParser
 from ...domain.models import Language
 from .base import LanguageParser
 from .go_parser import GoParser
@@ -19,6 +21,8 @@ class _ParserRegistry:
             Language.JAVASCRIPT: JavaScriptParser,
             Language.TYPESCRIPT: TypeScriptParser,
             Language.GO: GoParser,
+            Language.JAVA: JavaParser,
+            Language.KOTLIN: KotlinParser
         }
 
     def get_parser(self, language: Language) -> LanguageParser | None:

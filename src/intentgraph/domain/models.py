@@ -18,6 +18,8 @@ class Language(str, Enum):
     JAVASCRIPT = "javascript"
     TYPESCRIPT = "typescript"
     GO = "go"
+    JAVA = "java"
+    KOTLIN = "kotlin"
     UNKNOWN = "unknown"
 
     @classmethod
@@ -29,6 +31,9 @@ class Language(str, Enum):
             ".jsx": cls.JAVASCRIPT,
             ".ts": cls.TYPESCRIPT,
             ".tsx": cls.TYPESCRIPT,
+            ".java": cls.JAVA,
+            ".kt": cls.KOTLIN,
+            ".kts": cls.KOTLIN,
             ".go": cls.GO,
         }
         return ext_map.get(extension.lower(), cls.UNKNOWN)

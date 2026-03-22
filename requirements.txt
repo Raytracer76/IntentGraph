@@ -22,3 +22,5 @@ networkx>=3.2.0
 pydantic>=2.5.0
 orjson>=3.9.0
 
+tree-sitter-java==0.23.5
+tree-sitter-kotlin==1.1.0

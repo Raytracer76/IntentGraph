@@ -167,6 +167,34 @@ class CodeAnalysisService:
                     key_abstractions=[],  # Not extracted for TS/JS yet
                     design_patterns=[]  # Not detected for TS/JS yet
                 )
+            elif basic_info.language in (Language.JAVA, Language.KOTLIN):
+                # Attempt to retrieve the specialized parser for JVM languages.
+                # The registry handles lazy-loading of the Tree-sitter grammars.
+                parser = get_parser_for_language(basic_info.language)
+
+                if not parser:
+                    return basic_info
+                # Perform structural analysis to extract symbols, exports, and dependencies.
+                symbols, exports, func_deps, imports, metadata = parser.extract_code_structure(
+                    file_path, repo_path
+                )
+
+                file_purpose = self._infer_file_purpose(basic_info.path, symbols)
+
+                return FileInfo(
+                    path=basic_info.path,
+                    language=basic_info.language,
+                    sha256=basic_info.sha256,
+                    loc=basic_info.loc,
+                    id=basic_info.id,
+                    dependencies=basic_info.dependencies,
+                    symbols=symbols,
+                    exports=exports,
+                    function_dependencies=func_deps,
+                    imports=imports,
+                    complexity_score=metadata.get("total_functions", 0) + metadata.get("total_classes", 0),
+                    file_purpose=file_purpose
+                )
             else:
                 return basic_info
                 
